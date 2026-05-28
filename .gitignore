@@ -1,0 +1,57 @@
+# ==============================
+# SECRETOS — NUNCA VERSIONAR
+# ==============================
+.env
+.env.local
+.env.*.local
+.env.*
+*.json.key
+service-account*.json
+google-services.json
+GoogleService-Info.plist
+*-credentials.json
+*-keyfile.json
+*.key.json
+firebase-debug.log
+firestore-debug.log
+
+# ==============================
+# GCP / Google Cloud
+# ==============================
+.gcloud/
+application_default_credentials.json
+
+# ==============================
+# Archivos de Claude / IDEs
+# ==============================
+.claude/
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# ==============================
+# Logs y temporales
+# ==============================
+logs/
+*.log
+tmp/
+temp/
+coverage/
+
+# ==============================
+# Archivos personales del presentador
+# ==============================
+talk.md
+PRESENTER_GUIDE.md
+hackfox/PRESENTER_GUIDE.md
+hackfox/talk.md
+
+# ==============================
+# Node/npm/Build
+# ==============================
+node_modules/
+dist/
+build/
+.cache/

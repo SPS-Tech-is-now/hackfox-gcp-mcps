@@ -1,0 +1,71 @@
+{
+  "_instrucciones": [
+    "1. Copia este archivo a la ruta correcta de Claude Desktop:",
+    "     Windows: %APPDATA%\\Claude\\claude_desktop_config.json",
+    "     macOS:   ~/Library/Application Support/Claude/claude_desktop_config.json",
+    "",
+    "2. Reemplaza todos los valores en MAYUSCULAS con los de tu proyecto.",
+    "   NUNCA pongas keys reales en el repo — usa variables de entorno o Secret Manager.",
+    "",
+    "3. Elimina esta clave '_instrucciones' antes de usar el archivo.",
+    "",
+    "4. Reinicia Claude Desktop después de guardar — los cambios no se aplican en caliente.",
+    "",
+    "Cómo obtener las API keys (también en scripts/setup-gcp.sh Sección 4):",
+    "  Knowledge MCP: gcloud services api-keys create --display-name='Knowledge MCP Key' --allowed-api=developerknowledge.googleapis.com",
+    "  Google Maps:   gcloud services api-keys create --display-name='Maps MCP Key' --allowed-api=maps-backend.googleapis.com",
+    "  El keyString del output de cada comando es el valor que va en este archivo.",
+    "",
+    "Cómo obtener la ruta del service account key:",
+    "  Ver scripts/setup-gcp.sh Sección 6 — genera el archivo JSON y devuelve la ruta."
+  ],
+  "mcpServers": {
+    "google-developer-knowledge": {
+      "_nota": "MCP remoto — no requiere instalación local. Solo necesita la API key de developerknowledge.googleapis.com.",
+      "httpUrl": "https://developerknowledge.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "TU_KNOWLEDGE_API_KEY"
+      }
+    },
+    "google-maps": {
+      "_nota": "Clona el repo del Maps MCP y apunta RUTA_ABSOLUTA a la ubicación local del index.js.",
+      "command": "node",
+      "args": ["RUTA_ABSOLUTA/google-maps-mcp/index.js"],
+      "env": {
+        "GOOGLE_MAPS_API_KEY": "TU_MAPS_API_KEY"
+      }
+    },
+    "firebase": {
+      "_nota": "Instala automáticamente vía npx. SERVICE_ACCOUNT_KEY_PATH apunta al JSON generado en Sección 6 del script.",
+      "command": "npx",
+      "args": ["-y", "@gannonh/firebase-mcp"],
+      "env": {
+        "SERVICE_ACCOUNT_KEY_PATH": "RUTA_AL_SA_KEY.json",
+        "FIREBASE_STORAGE_BUCKET": "TU_PROJECT_ID.appspot.com"
+      }
+    },
+    "google-cloud": {
+      "_nota": "Requiere clonar el repo de Google MCP. RUTA_ABSOLUTA apunta al archivo index.js del servidor gcloud.",
+      "command": "node",
+      "args": ["RUTA_ABSOLUTA/google-mcp/gcloud/index.js"],
+      "env": {
+        "GOOGLE_CLOUD_PROJECT": "TU_PROJECT_ID",
+        "GOOGLE_APPLICATION_CREDENTIALS": "RUTA_AL_SA_KEY.json"
+      }
+    },
+    "stitch": {
+      "_nota": "MCP de Anthropic para generación de UI. No requiere configuración adicional.",
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-stitch"],
+      "env": {}
+    },
+    "bigquery": {
+      "_nota": "TU_PROJECT_ID es el argumento posicional — especifica el proyecto de BigQuery que consultará el MCP.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-bigquery", "TU_PROJECT_ID"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "RUTA_AL_SA_KEY.json"
+      }
+    }
+  }
+}

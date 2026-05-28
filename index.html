@@ -1,0 +1,3190 @@
+﻿<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hackeando el Tiempo — HackFox 2026</title>
+
+  <!-- SEO / OG -->
+  <meta name="author" content="SPS Solutions · HackFox 2026" />
+  <meta name="description" content="MCP, Agentes de IA y Google Cloud en 26 horas — Demos en vivo: Knowledge MCP · Firebase MCP · Cloud Run MCP · contracts-first. HackFox 2026 · GDG Tijuana." />
+  <meta name="keywords" content="MCP, Model Context Protocol, Claude, Google Cloud, Firebase Studio, Knowledge MCP, Google Maps MCP, hackathon, HackFox, GDG Tijuana, Tijuana Sin Barreras, SPS Solutions" />
+  <meta property="og:title" content="Hackeando el Tiempo — HackFox 2026" />
+  <meta property="og:description" content="Demo en vivo: cómo MCP le da a Claude acceso directo a tus APIs, tu base de datos y la documentación oficial de Google. Sin copiar. Sin pegar. SPS × Google Cloud × GDG Tijuana." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://github.com/SPS-Tech-is-now/hackfox-gcp-mcps" />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="HackFox 2026" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hackeando el Tiempo — HackFox 2026" />
+  <meta name="twitter:description" content="MCP · Claude · Google Cloud · Firebase Studio. Demo en vivo — HackFox 2026." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── CSS VARIABLES — SPS × Google Cloud ─── */
+    :root {
+      /* SPS Dark base */
+      --dark:         #1a1a2e;
+      --dark-700:     #2d2d44;
+      /* Google Cloud accent */
+      --accent:       #1a73e8;
+      --accent-light: #4a90d9;
+      --accent-100:   #e8f0fe;
+      --accent-200:   #c5d8fc;
+      /* Terminal / dark UI */
+      --bg:           #0a0a0f;
+      --surface:      #111118;
+      --surface2:     #16161f;
+      --border:       #1e1e2e;
+      --code-bg:      #0d1117;
+      /* Text */
+      --text:         #e2e8f0;
+      --text-muted:   #64748b;
+      --text-dim:     #94a3b8;
+      /* Semantic colors */
+      --green:        #22c55e;
+      --red:          #ef4444;
+      --yellow:       #eab308;
+      --cyan:         #06b6d4;
+      --purple:       #a855f7;
+      /* Typography */
+      --font-mono:    "SF Mono","Fira Code","Cascadia Code",Consolas,monospace;
+      --font-sans:    "Google Sans","Segoe UI",Arial,sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 42px; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 2rem;
+      background: rgba(10, 10, 15, 0.9);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-logo img {
+      height: 32px;
+      background: #fff;
+      border-radius: 6px;
+      padding: 3px 8px;
+      object-fit: contain;
+    }
+
+    .nav-sep {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.2);
+      font-weight: 300;
+    }
+
+    .nav-event {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .nav-event span { color: var(--accent); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .logo-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border: 1px solid rgba(26,115,232,0.5);
+      border-radius: 100px;
+      color: var(--accent);
+      background: rgba(26,115,232,0.1);
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    /* ─── SLIDE ─── */
+    .slide {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 7rem 2rem 2rem;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .slide-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ─── SECTION LABEL ─── */
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-label::before { content: "//"; color: var(--accent); }
+
+    /* ─── HERO ─── */
+    #hero {
+      background:
+        radial-gradient(ellipse at 15% 50%, rgba(26,115,232,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(13,71,161,0.07) 0%, transparent 50%),
+        linear-gradient(180deg, #1a1a2e 0%, var(--bg) 35%);
+    }
+
+    /* Logo triada hero */
+    .hero-logos {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-logos img {
+      height: 38px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px 10px;
+      object-fit: contain;
+    }
+
+    .hero-logos .logo-sep {
+      font-size: 1.3rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hero-kicker::before {
+      content: "";
+      display: inline-block;
+      width: 2rem;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title .cursor {
+      display: inline-block;
+      width: 0.08em;
+      height: 0.88em;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 0.05em;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-dim);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      max-width: 620px;
+    }
+
+    /* Stack tags */
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stack-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      background: var(--surface);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .stack-tag:hover { border-color: var(--accent); color: var(--accent); }
+    .stack-tag.gcp { border-color: rgba(26,115,232,0.4); color: var(--accent-light); }
+
+    .hero-cta {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      animation: pulse-opacity 2s ease-in-out infinite;
+    }
+
+    .hero-cta .key {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      background: var(--surface);
+    }
+
+    @keyframes pulse-opacity {
+      0%, 100% { opacity: 0.6; }
+      50%       { opacity: 1; }
+    }
+
+    /* ─── HEADINGS ─── */
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 0.65rem;
+      font-family: var(--font-mono);
+    }
+
+    p {
+      color: var(--text-dim);
+      margin-bottom: 0.9rem;
+      font-size: 0.93rem;
+      max-width: 700px;
+    }
+
+    /* ─── AGENDA ─── */
+    .agenda-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.83rem;
+    }
+
+    .agenda-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .agenda-item:hover { border-color: var(--accent); }
+    .agenda-time { color: var(--accent); min-width: 3.5rem; font-size: 0.72rem; }
+    .agenda-num { color: var(--text-muted); min-width: 1.5rem; }
+    .agenda-title { color: var(--text); flex: 1; }
+    .agenda-dur { color: var(--text-muted); font-size: 0.7rem; }
+
+    /* ─── PROBLEM FLOW ─── */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 1.5rem 0;
+    }
+
+    .flow-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.9rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .flow-arrow { color: var(--text-muted); font-size: 1rem; }
+    .flow-step.bad { border-color: var(--red); color: var(--red); }
+    .flow-step.good { border-color: var(--green); color: var(--green); }
+
+    /* ─── STAT CARDS ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.9rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      font-family: var(--font-mono);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* ─── TOOL CARDS ─── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.9rem;
+      margin: 1.5rem 0;
+    }
+
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .tool-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .tool-card.active { border-color: var(--accent); background: rgba(26,115,232,0.05); }
+
+    .tool-name {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+
+    .tool-role {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      margin-bottom: 0.7rem;
+    }
+
+    .tool-desc { font-size: 0.83rem; color: var(--text-dim); line-height: 1.5; }
+
+    /* ─── TERMINAL ─── */
+    .terminal {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1.25rem 0;
+      font-family: var(--font-mono);
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1rem;
+      background: #161b22;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .term-dot.red    { background: #ff5f57; }
+    .term-dot.yellow { background: #febc2e; }
+    .term-dot.green  { background: #28c840; }
+    .terminal-title  { font-size: 0.68rem; color: var(--text-muted); margin-left: 0.5rem; }
+
+    .terminal-body {
+      padding: 1.2rem 1.5rem;
+      font-size: 0.8rem;
+      line-height: 1.8;
+    }
+
+    .term-prompt   { color: var(--green); }
+    .term-cmd      { color: var(--text); }
+    .term-comment  { color: var(--text-muted); font-style: italic; }
+    .term-output   { color: var(--text-dim); }
+    .term-success  { color: var(--green); }
+    .term-error    { color: var(--red); }
+    .term-highlight{ color: var(--accent); }
+    .term-warn     { color: var(--yellow); }
+    .term-key      { color: var(--purple); }
+    .term-string   { color: #22c55e; }
+    .term-url      { color: var(--cyan); }
+
+    /* ─── MERMAID ─── */
+    .mermaid-wrap {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px 20px;
+      border: 1px solid #e2e8f0;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    .mermaid-wrap .mermaid {
+      display: flex;
+      justify-content: center;
+    }
+
+    .mermaid-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    /* ─── DEMO BADGE ─── */
+    .demo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.28rem 0.8rem;
+      border: 1px solid var(--accent);
+      border-radius: 100px;
+      color: var(--accent);
+      background: rgba(26,115,232,0.08);
+      margin-bottom: 1rem;
+    }
+
+    .demo-badge::before { content: "▶"; font-size: 0.58rem; }
+
+    /* ─── RESULT CARD ─── */
+    .result-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: 8px;
+      padding: 1.1rem 1.4rem;
+      margin: 0.9rem 0;
+      font-size: 0.83rem;
+    }
+
+    .result-card .result-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+
+    .result-card p { margin: 0; color: var(--text-dim); }
+
+    /* ─── COMPARISON TABLE ─── */
+    .comparison {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+    }
+
+    .comparison th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid rgba(30,30,46,0.5);
+      color: var(--text-dim);
+      vertical-align: top;
+    }
+
+    .comparison tr:hover td { background: var(--surface2); }
+    .comparison td:first-child { color: var(--text); }
+    .check { color: var(--green); }
+    .cross { color: var(--red); }
+
+    /* ─── MODELS GRID ─── */
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+      margin: 1.25rem 0;
+    }
+
+    .model-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem;
+      transition: border-color 0.2s;
+    }
+
+    .model-card.default {
+      border-color: var(--accent);
+      background: rgba(26,115,232,0.06);
+    }
+
+    .model-name { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .model-card.default .model-name { color: var(--accent); }
+    .model-when { font-size: 0.73rem; color: var(--text-muted); line-height: 1.5; }
+
+    /* ─── AGENTS TREE ─── */
+    .agents-tree {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+      margin: 1.25rem 0;
+    }
+
+    .tree-line { display: flex; gap: 0.5rem; }
+    .tree-indent { padding-left: 1.5rem; }
+    .tree-file { color: var(--text-dim); }
+    .tree-dir { color: var(--accent); font-weight: 600; }
+    .tree-desc { color: var(--text-muted); }
+    .tree-sym { color: var(--text-muted); }
+
+    /* ─── TAKEAWAYS ─── */
+    .takeaways-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.9rem;
+      margin: 1.5rem 0;
+    }
+
+    .takeaway {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+    }
+
+    .takeaway-num {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .takeaway-num::before { content: "[✓]"; }
+    .takeaway-title { font-size: 0.97rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+    .takeaway-body { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── QR GRID ─── */
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 0.9rem;
+      margin-top: 2rem;
+    }
+
+    .qr-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+
+    .qr-card:hover { border-color: var(--accent); }
+
+    .qr-placeholder {
+      width: 76px;
+      height: 76px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin: 0 auto 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: var(--text-muted);
+    }
+
+    .qr-title { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text); margin-bottom: 0.2rem; }
+    .qr-url { font-family: var(--font-mono); font-size: 0.63rem; color: var(--text-muted); }
+
+    /* ─── RULES ─── */
+    .rules-list { display: flex; flex-direction: column; gap: 0.7rem; margin: 1.5rem 0; }
+
+    .rule {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 0.9rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .rule-num { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); min-width: 1.5rem; font-weight: 700; }
+    .rule-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+    .rule-text strong { color: var(--text); }
+
+    /* ─── VERSUS GRID (PRO TIP slide) ─── */
+    .versus-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .versus-col {
+      border-radius: 12px;
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .versus-bad {
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+
+    .versus-good {
+      background: rgba(34,197,94,0.06);
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+
+    .versus-header {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 0.2rem;
+    }
+
+    .versus-bad  .versus-header { color: var(--red); }
+    .versus-good .versus-header { color: var(--green); }
+
+    .versus-item {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+      padding: 0.55rem 0.85rem;
+      background: rgba(0,0,0,0.18);
+      border-radius: 7px;
+    }
+
+    .versus-bad  .versus-item { border-left: 2px solid rgba(239,68,68,0.4); }
+    .versus-good .versus-item { border-left: 2px solid rgba(34,197,94,0.4); }
+
+    @media (max-width: 640px) {
+      .versus-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── QUOTE ─── */
+    .quote {
+      border-left: 3px solid var(--accent);
+      padding: 0.9rem 1.4rem;
+      margin: 1.25rem 0;
+      background: rgba(26,115,232,0.05);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.97rem;
+      color: var(--text-dim);
+      font-style: italic;
+      line-height: 1.7;
+    }
+
+    .quote strong { color: var(--text); font-style: normal; }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.75rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+    /* ─── MANTRA ─── */
+    .mantra {
+      font-size: clamp(1.2rem, 3.5vw, 1.9rem);
+      font-weight: 800;
+      text-align: center;
+      padding: 1.75rem 0;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .mantra span { color: var(--accent); }
+
+    /* ─── LOGO BAND ─── */
+    .logo-band {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .logo-band-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-band-item img {
+      height: 32px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 5px 10px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .logo-band-item img:hover { opacity: 1; }
+
+    .logo-band-item span {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .logo-band-sep { color: rgba(255,255,255,0.15); font-size: 1.2rem; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-brand img {
+      height: 28px;
+      background: #fff;
+      border-radius: 6px;
+      padding: 3px 8px;
+      object-fit: contain;
+    }
+
+    .footer-conf { font-size: 0.68rem; color: rgba(255,255,255,0.35); }
+
+    .ft-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+
+    .ft-tag {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-muted);
+    }
+
+    .footer-bottom {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer-bottom a { color: var(--accent); text-decoration: none; }
+    .footer-bottom a:hover { text-decoration: underline; }
+
+    /* ─── GUIDE CARDS ─── */
+    .guides-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.9rem;
+      margin: 1.5rem 0;
+    }
+
+    .guide-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s, background 0.2s;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .guide-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .guide-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      background: var(--surface2);
+    }
+
+    .guide-card:hover::before { opacity: 1; }
+
+    .guide-card-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .guide-card-title {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .guide-card-path {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .guide-card-desc {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .guide-card-cta {
+      margin-top: auto;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .guide-card:hover .guide-card-cta { opacity: 1; }
+
+    /* ─── MARKDOWN OVERLAY ─── */
+    #md-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(5, 5, 10, 0.97);
+      backdrop-filter: blur(16px);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #md-overlay.open { display: flex; }
+
+    .md-overlay-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .md-overlay-title {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .md-overlay-title span { color: var(--accent); }
+
+    .md-overlay-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .md-overlay-esc {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .md-overlay-esc .key {
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.62rem;
+      background: var(--surface2);
+    }
+
+    .md-close-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.4rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      transition: border-color 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .md-close-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    .md-overlay-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+
+    .md-content {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 2.5rem 3rem;
+      color: #1c1917;
+      font-family: var(--font-sans);
+      font-size: 0.93rem;
+      line-height: 1.75;
+    }
+
+    /* Markdown content styling */
+    .md-content h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin: 0 0 1rem;
+      letter-spacing: -0.02em;
+      border-bottom: 2px solid #1a73e8;
+      padding-bottom: 0.75rem;
+    }
+
+    .md-content h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 2rem 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .md-content h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #2d2d44;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .md-content h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #57534e;
+      margin: 1.25rem 0 0.4rem;
+      font-family: var(--font-mono);
+    }
+
+    .md-content p { margin: 0 0 0.85rem; color: #3d3d56; }
+
+    .md-content a { color: #1a73e8; text-decoration: none; }
+    .md-content a:hover { text-decoration: underline; }
+
+    .md-content code {
+      background: #f0f4ff;
+      border: 1px solid #c5d8fc;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #1a1a2e;
+    }
+
+    .md-content pre {
+      background: #0d1117;
+      border: 1px solid #1e1e2e;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    .md-content pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: #e2e8f0;
+      font-size: 0.8rem;
+      line-height: 1.7;
+    }
+
+    .md-content blockquote {
+      border-left: 3px solid #1a73e8;
+      padding: 0.75rem 1.25rem;
+      margin: 1rem 0;
+      background: #e8f0fe;
+      border-radius: 0 8px 8px 0;
+      color: #1a1a2e;
+      font-style: italic;
+    }
+
+    .md-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.83rem;
+    }
+
+    .md-content table th {
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      background: #1a1a2e;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .md-content table td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid #e7e5e4;
+      color: #3d3d56;
+      vertical-align: top;
+    }
+
+    .md-content table tr:nth-child(even) td { background: #faf8f5; }
+
+    .md-content ul, .md-content ol {
+      padding-left: 1.5rem;
+      margin: 0 0 0.85rem;
+    }
+
+    .md-content li { margin-bottom: 0.35rem; color: #3d3d56; }
+
+    .md-content strong { color: #1a1a2e; font-weight: 700; }
+
+    .md-content hr {
+      border: none;
+      border-top: 1px solid #e7e5e4;
+      margin: 1.75rem 0;
+    }
+
+    /* Loading state */
+    .md-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      gap: 0.5rem;
+    }
+
+    .md-loading::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 8px rgba(26,115,232,0.3); }
+      50%       { box-shadow: 0 0 22px rgba(26,115,232,0.65), 0 0 40px rgba(26,115,232,0.2); }
+    }
+    @keyframes scanline {
+      0%   { top: -10%; }
+      100% { top: 110%; }
+    }
+    @keyframes marquee-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes glitch-flicker {
+      0%, 98%, 100% { opacity: 1; clip-path: none; }
+      99% { opacity: 0.6; clip-path: inset(30% 0 40% 0); transform: translate(-2px, 0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* Demo badge animated glow */
+    .demo-badge { animation: glow-pulse 2.5s ease-in-out infinite; }
+
+    /* GDG/HackFox scanline overlay */
+    .scanline-overlay {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
+      );
+    }
+    /* Sponsor / org logo marquee strip */
+    .logo-marquee-wrap {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+    }
+    .logo-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 28s linear infinite;
+    }
+    .logo-marquee-track:hover { animation-play-state: paused; }
+    .logo-marquee-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 24px;
+      margin: 0 6px;
+      border: 1px solid rgba(26,115,232,0.25);
+      border-radius: 8px;
+      background: var(--surface);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── ACCESIBILIDAD — skip nav + focus indicators ─── */
+    .skip-nav {
+      position: absolute;
+      top: -80px;
+      left: 1rem;
+      background: var(--accent);
+      color: #fff;
+      padding: .5rem 1.2rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: .78rem;
+      z-index: 9999;
+      text-decoration: none;
+      transition: top .15s ease;
+      font-weight: 600;
+    }
+    .skip-nav:focus { top: 0.6rem; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .nav-links a:focus-visible,
+    .footer-bottom a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    /* ─── TABLE WRAP — horizontal scroll on small screens ─── */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ─── RESPONSIVE — TABLET ─── */
+    @media (max-width: 1024px) {
+      .models-grid { grid-template-columns: repeat(2, 1fr); }
+      .nav-links { gap: 0.65rem; font-size: 0.66rem; }
+      .tools-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
+    /* ─── RESPONSIVE — MOBILE ─── */
+    @media (max-width: 640px) {
+      nav { padding: 0.7rem 1rem; }
+      .nav-links { display: none; }
+      .nav-event { display: none; }
+      .logo-badge { font-size: 0.62rem; padding: 0.2rem 0.45rem; }
+
+      .slide { padding: 6rem 1rem 2rem; }
+
+      .models-grid { grid-template-columns: 1fr; }
+
+      h2 { font-size: clamp(1.3rem, 7vw, 1.9rem); }
+
+      .hero-title { font-size: clamp(1.9rem, 9vw, 3rem); }
+      .hero-logos { gap: 0.6rem; }
+      .hero-logos img { height: 30px; }
+      .hero-subtitle { font-size: 0.9rem; }
+
+      .agenda-item { flex-wrap: wrap; gap: 0.4rem; }
+      .agenda-dur { display: none; }
+
+      .comparison { min-width: 520px; }
+
+      .terminal-body {
+        padding: 0.85rem 0.9rem;
+        font-size: 0.73rem;
+        overflow-x: auto;
+      }
+
+      .agents-tree {
+        font-size: 0.7rem;
+        overflow-x: auto;
+      }
+      .tree-desc { display: none; }
+
+      .qr-grid { grid-template-columns: repeat(2, 1fr); }
+      .qr-placeholder { width: 60px; height: 60px; }
+
+      .logo-band { gap: 1rem; flex-wrap: wrap; }
+
+      .footer-top { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+
+      .mermaid-wrap { padding: 12px 8px; overflow-x: auto; }
+
+      .md-content { padding: 1.5rem 1.2rem; }
+
+      .mantra { font-size: clamp(0.95rem, 5.5vw, 1.4rem); padding: 1.25rem 0; }
+
+      .stat-number { font-size: 1.9rem; }
+
+      .guides-grid { grid-template-columns: 1fr; }
+
+      .takeaways-grid { grid-template-columns: 1fr; }
+
+      .stats-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+
+      .rules-list .rule { flex-wrap: wrap; }
+
+      .md-overlay-esc { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- handleLogoError JS — debe estar antes del primer <img> con onerror -->
+<script>
+function handleLogoError(img, name) {
+  name = name || img.alt;
+  img.style.display = 'none';
+  const wrap = img.closest('.client-logo-wrap') || img.parentElement;
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 3).toUpperCase();
+  wrap.innerHTML = `<div style="height:38px;min-width:52px;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.25);border-radius:8px;display:flex;align-items:center;
+    justify-content:center;padding:0 12px;font-size:.82rem;font-weight:800;
+    color:#fff;letter-spacing:1px;">${initials}</div>`;
+}
+</script>
+
+<!-- Skip navigation — accesibilidad teclado -->
+<a class="skip-nav" href="#hero">Saltar al contenido</a>
+
+<!-- ─── SCANLINE OVERLAY (HackFox aesthetic) ─── -->
+<div class="scanline-overlay" aria-hidden="true"></div>
+
+<!-- ─── NAV ─── -->
+<nav aria-label="Navegación principal">
+  <div class="nav-left">
+    <!-- Logo SPS: CDN directo → apistemic → fallback texto -->
+    <a class="nav-logo" href="https://www.spsolutions.com.mx" target="_blank" rel="noopener">
+      <img src="https://developers.spsolutions.com.mx/images/Logos/Logo-sps-text.webp"
+           onerror="this.onerror=null;this.src='https://logos-api.apistemic.com/domain:spsolutions.com.mx'"
+           alt="SP Solutions"
+           width="96" height="32" />
+    </a>
+    <span class="nav-sep">×</span>
+    <div class="nav-event">
+      <span>HackFox 2026</span> · GDG Tijuana
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links" role="list">
+      <a href="#problema" role="listitem">Problema</a>
+      <a href="#arquitectura" role="listitem">Arquitectura</a>
+      <a href="#demos" role="listitem">Demos</a>
+      <a href="#agentes" role="listitem">Agentes</a>
+      <a href="#comparativa" role="listitem">Comparativa</a>
+      <a href="#guias" role="listitem">Guías</a>
+      <a href="#repo" role="listitem">Repo</a>
+    </div>
+    <span class="logo-badge">Google Cloud</span>
+  </div>
+</nav>
+
+
+<!-- ─── HERO ─── -->
+<section class="slide" id="hero" role="main">
+  <div class="slide-inner">
+
+    <!-- Triada de logos: SPS × Google Cloud × GDG Tijuana -->
+    <div class="hero-logos reveal">
+      <a href="https://www.spsolutions.com.mx" target="_blank" rel="noopener">
+        <img src="https://developers.spsolutions.com.mx/images/Logos/Logo-sps-text.webp"
+             onerror="this.onerror=null;this.src='https://logos-api.apistemic.com/domain:spsolutions.com.mx'"
+             alt="SP Solutions"
+             style="height:38px;background:#fff;border-radius:8px;padding:4px 10px;object-fit:contain;" />
+      </a>
+      <span class="logo-sep">×</span>
+      <a href="https://cloud.google.com" target="_blank" rel="noopener">
+        <!-- Google Cloud logo from HackFox official site -->
+        <img src="https://gdgtijuana.com.mx/google-cloud-logo-0.png"
+             onerror="this.onerror=null;this.src='https://logos-api.apistemic.com/domain:cloud.google.com'"
+             alt="Google Cloud"
+             style="height:38px;background:#fff;border-radius:8px;padding:4px 10px;object-fit:contain;" />
+      </a>
+      <span class="logo-sep">×</span>
+      <a href="https://hackfox.gdgtijuana.com.mx/hackfox" target="_blank" rel="noopener">
+        <!-- GDG Tijuana / HackFox logo -->
+        <img src="https://gdgtijuana.com.mx/logo.jpg"
+             onerror="this.onerror=null;this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="GDG Tijuana · HackFox"
+             style="height:38px;border-radius:8px;object-fit:contain;" />
+        <span style="display:none;height:38px;padding:0 14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;align-items:center;font-size:.75rem;font-weight:800;letter-spacing:.04em;color:#fff;">GDG TJ</span>
+      </a>
+    </div>
+
+    <div class="hero-kicker reveal reveal-delay-1">HackFox 2026 — "Tijuana Sin Barreras" · 28–29 mayo 2026 · Pixeland Arcade</div>
+
+    <h1 class="hero-title reveal reveal-delay-2">
+      Hackeando el Tiempo<span class="cursor"></span>
+    </h1>
+
+    <p class="hero-subtitle reveal reveal-delay-3">
+      MCP, Agentes de IA y Google Cloud en 26 Horas<br />
+      Knowledge MCP · Firebase MCP · Cloud Run MCP · contracts-first
+    </p>
+
+    <!-- Stack tags GCP -->
+    <div class="stack-tags reveal reveal-delay-4">
+      <span class="stack-tag gcp">Knowledge MCP</span>
+      <span class="stack-tag gcp">Firebase MCP</span>
+      <span class="stack-tag gcp">Cloud Run MCP</span>
+      <span class="stack-tag gcp">Firebase Studio · Stitch</span>
+      <span class="stack-tag gcp">Firestore</span>
+      <span class="stack-tag">Claude Sonnet 4.6</span>
+      <span class="stack-tag">Claude Code CLI</span>
+      <span class="stack-tag">GitHub Codex</span>
+      <span class="stack-tag">Gemini 2.0 Flash</span>
+      <span class="stack-tag" style="border-color:rgba(168,85,247,.4);color:#c084fc;">contracts-first</span>
+      <span class="stack-tag" style="border-color:rgba(168,85,247,.4);color:#c084fc;">GitHub collab</span>
+    </div>
+
+    <div class="hero-cta">
+      <span class="key">SPACE</span>
+      para continuar_
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ─── WHOAMI ─── -->
+<section class="slide" id="whoami">
+  <div class="slide-inner">
+    <div class="section-label">whoami</div>
+    <h2>El presentador</h2>
+
+    <div class="terminal" style="margin-top:1.5rem">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">arturo@sps-solutions — bash</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-prompt">$</span> <span class="term-cmd">whoami --verbose</span></div>
+        <div style="margin-top:.75rem;display:flex;flex-direction:column;gap:.4rem;">
+          <div style="display:flex;gap:1.5rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+            <span style="color:var(--text-muted);min-width:6rem;font-size:.73rem;">name</span>
+            <span>Arturo González Romero</span>
+          </div>
+          <div style="display:flex;gap:1.5rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+            <span style="color:var(--text-muted);min-width:6rem;font-size:.73rem;">role</span>
+            <span>Director of Presales &amp; Solutions</span>
+          </div>
+          <div style="display:flex;gap:1.5rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+            <span style="color:var(--text-muted);min-width:6rem;font-size:.73rem;">company</span>
+            <span>SPS Solutions — <span style="color:var(--accent)">Google Cloud Premier Partner</span></span>
+          </div>
+          <div style="display:flex;gap:1.5rem;padding:.5rem 0;border-bottom:1px solid var(--border)">
+            <span style="color:var(--text-muted);min-width:6rem;font-size:.73rem;">linkedIn</span>
+            <span style="color:var(--accent)">/arturo-gonzalez-romero</span>
+          </div>
+          <div style="display:flex;gap:1.5rem;padding:.5rem 0">
+            <span style="color:var(--text-muted);min-width:6rem;font-size:.73rem;">mantra</span>
+            <span style="color:var(--accent);font-style:italic;">"La IA es el motor. Tú eres el arquitecto."</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── AGENDA ─── -->
+<section class="slide" id="agenda">
+  <div class="slide-inner">
+    <div class="section-label">Agenda</div>
+    <h2>Plan de batalla — 60 minutos</h2>
+    <p>Demos en vivo · sin slides de vendor · el repo es tuyo al terminar</p>
+
+    <div class="agenda-list">
+      <div class="agenda-item">
+        <span class="agenda-time">[00:00]</span>
+        <span class="agenda-num">01</span>
+        <span class="agenda-title">Intro — El arte de dirigir, no teclear</span>
+        <span class="agenda-dur">5 min</span>
+      </div>
+      <div class="agenda-item">
+        <span class="agenda-time">[05:00]</span>
+        <span class="agenda-num">02</span>
+        <span class="agenda-title">El problema — el loop del copy-paste</span>
+        <span class="agenda-dur">5 min</span>
+      </div>
+      <div class="agenda-item">
+        <span class="agenda-time">[10:00]</span>
+        <span class="agenda-num">03</span>
+        <span class="agenda-title">El ecosistema — herramientas y modelos</span>
+        <span class="agenda-dur">10 min</span>
+      </div>
+      <div class="agenda-item" style="border-color:var(--accent)">
+        <span class="agenda-time" style="color:var(--cyan)">[20:00]</span>
+        <span class="agenda-num" style="color:var(--cyan)">04</span>
+        <span class="agenda-title">DEMO 1 — Knowledge MCP</span>
+        <span class="agenda-dur">8 min</span>
+      </div>
+      <div class="agenda-item" style="border-color:var(--accent)">
+        <span class="agenda-time" style="color:var(--cyan)">[28:00]</span>
+        <span class="agenda-num" style="color:var(--cyan)">05</span>
+        <span class="agenda-title">DEMO 2 — Firebase MCP + Stitch</span>
+        <span class="agenda-dur">7 min</span>
+      </div>
+      <div class="agenda-item" style="border-color:var(--accent)">
+        <span class="agenda-time" style="color:var(--cyan)">[35:00]</span>
+        <span class="agenda-num" style="color:var(--cyan)">06</span>
+        <span class="agenda-title">DEMO 3 — Deploy a Cloud Run con MCP</span>
+        <span class="agenda-dur">7 min</span>
+      </div>
+      <div class="agenda-item" style="border-color:var(--purple)">
+        <span class="agenda-time" style="color:var(--purple)">[42:00]</span>
+        <span class="agenda-num" style="color:var(--purple)">07</span>
+        <span class="agenda-title">DEMO 4 — De coder básico a pro: contracts-first</span>
+        <span class="agenda-dur">8 min</span>
+      </div>
+      <div class="agenda-item">
+        <span class="agenda-time">[50:00]</span>
+        <span class="agenda-num">08</span>
+        <span class="agenda-title">Arquitectura de agentes — el CLAUDE.md</span>
+        <span class="agenda-dur">5 min</span>
+      </div>
+      <div class="agenda-item">
+        <span class="agenda-time">[55:00]</span>
+        <span class="agenda-num">09</span>
+        <span class="agenda-title">Q&amp;A</span>
+        <span class="agenda-dur">5 min</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── PROBLEMA ─── -->
+<section class="slide" id="problema">
+  <div class="slide-inner">
+    <div class="section-label">El Problema</div>
+    <h2>El loop del copy-paste — no es solo para devs</h2>
+
+    <!-- Multi-profile examples -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.85rem;margin-bottom:1.5rem;">
+
+      <div class="reveal" style="background:var(--surface);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:1rem;">
+        <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--red);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;">🖥️ Dev Backend</div>
+        <div class="flow" style="flex-direction:column;gap:.35rem;align-items:flex-start;">
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Abre Firestore console</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Copia la colección a mano</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Pega en el chat de IA</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;border-color:var(--red);color:var(--red)">Schema cambió · repite ↺</div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-1" style="background:var(--surface);border:1px solid rgba(234,179,8,0.3);border-radius:10px;padding:1rem;">
+        <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--yellow);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;">🎨 Designer / Front</div>
+        <div class="flow" style="flex-direction:column;gap:.35rem;align-items:flex-start;">
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Abre Figma + los datos reales</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Copia ejemplos de Firestore</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Describe la UI al agente</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;border-color:var(--yellow);color:var(--yellow)">Campos inventados · repite ↺</div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2" style="background:var(--surface);border:1px solid rgba(6,182,212,0.3);border-radius:10px;padding:1rem;">
+        <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;">📊 Analista de Negocio</div>
+        <div class="flow" style="flex-direction:column;gap:.35rem;align-items:flex-start;">
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Descarga CSV de BigQuery</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Sube el CSV al chat de IA</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Pide el análisis</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;border-color:var(--cyan);color:var(--cyan)">Datos desactualizados · repite ↺</div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-3" style="background:var(--surface);border:1px solid rgba(168,85,247,0.3);border-radius:10px;padding:1rem;">
+        <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--purple);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem;">🏗️ Arquitecto / PM</div>
+        <div class="flow" style="flex-direction:column;gap:.35rem;align-items:flex-start;">
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Busca la doc oficial de GCP</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Copia párrafos relevantes</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;">Pega en el contexto de la IA</div>
+          <div style="color:var(--text-muted);font-size:.7rem;padding-left:.3rem">↓</div>
+          <div class="flow-step bad" style="width:100%;font-size:.7rem;border-color:var(--purple);color:var(--purple)">Doc desactualizada · repite ↺</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="stats-grid reveal">
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--red)">2 h</div>
+        <div class="stat-label">mínimo perdido en el loop<br/>antes de escribir algo útil</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--yellow)">8%</div>
+        <div class="stat-label">de las 26 horas del hackathon<br/>evaporadas antes de empezar</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">menos fricción con MCP<br/>— la IA trabaja con datos vivos</div>
+      </div>
+    </div>
+
+    <div class="quote reveal">
+      <strong>La solución en una oración:</strong> Model Context Protocol le da a la IA acceso directo — en tiempo real — a tus bases de datos, tus APIs, tu documentación. Sin copiar. Sin pegar. Sin desincronizarse. <em>Para todos los perfiles del equipo.</em>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── ARQUITECTURA MCP — MERMAID ─── -->
+<section class="slide" id="arquitectura">
+  <div class="slide-inner">
+    <div class="section-label">Arquitectura</div>
+    <h2>El ecosistema MCP — vista completa</h2>
+    <p>Cómo se conectan tus herramientas de IA con los servicios de Google Cloud vía MCP servers.</p>
+
+    <div class="mermaid-wrap">
+      <div class="mermaid-title">Flujo de contexto · MCP + Google Cloud · HackFox 2026</div>
+      <pre class="mermaid">
+flowchart LR
+  subgraph Tools["🛠️ Herramientas de IA"]
+    direction TB
+    FS["Firebase Studio\n(IDE web · Gemini / Claude)"]
+    CD["Desktop AI Agent\n(Claude / Cursor / Windsurf)"]
+    CC["Terminal Agent\n(Claude Code · Codex · Gemini CLI)"]
+  end
+
+  subgraph MCPs["⚡ MCP Servers"]
+    direction TB
+    KM["Knowledge MCP\ngoogle-developer-knowledge"]
+    MM["Maps Code Assist\ngmp-code-assist"]
+    FM["Firestore MCP\ngoogle-cloud-firestore"]
+    FB["Firebase MCP\nfirebase-mcp-server"]
+    CR["Cloud Run MCP\ncloudrun"]
+    CS["Cloud SQL MCP\ncloud-sql-managed-mcp"]
+  end
+
+  subgraph GCP["☁️ Google Cloud"]
+    direction TB
+    DOCS["Developer Docs\nGemini · Firebase · Maps"]
+    MAPS["Maps Platform Docs\ncode assist · no llamadas directas"]
+    FST["Firestore\n(R/W add_document · list_documents)"]
+    FBP["Firebase Project\n(deploy · SDK config · rules)"]
+    CRS["Cloud Run\n(deploy desde el chat)"]
+    SQL["Cloud SQL\n(execute_sql conversacional)"]
+  end
+
+  Tools -- "prompt + contexto" --> MCPs
+  KM --> DOCS
+  MM --> MAPS
+  FM --> FST
+  FB --> FBP
+  CR --> CRS
+  CS --> SQL
+
+  style Tools fill:#1a1a2e,stroke:#1a73e8,color:#e2e8f0
+  style MCPs  fill:#0d1117,stroke:#7c3aed,color:#e2e8f0
+  style GCP   fill:#0d2a4a,stroke:#1a73e8,color:#e2e8f0
+      </pre>
+    </div>
+
+    <div class="result-card" style="border-left-color:var(--accent)">
+      <div class="result-label" style="color:var(--accent)">Punto clave</div>
+      <p>Los MCP servers son el puente. Tu herramienta de IA no necesita saber cómo llamar a Firestore — <code style="color:var(--accent);background:var(--surface2);padding:.1rem .4rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;">google-cloud-firestore</code> lo sabe. El agente (Claude, Codex, Gemini o el que elijas) solo pide lo que necesita en lenguaje natural.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── ECOSISTEMA ─── -->
+<section class="slide" id="ecosistema">
+  <div class="slide-inner">
+    <div class="section-label">El Ecosistema</div>
+    <h2>El ecosistema MCP — elige tus herramientas</h2>
+
+    <div class="tools-grid">
+      <div class="tool-card active">
+        <div class="tool-name">Firebase Studio</div>
+        <div class="tool-role">IDE web · browser · sin instalar · plugins nativos</div>
+        <div class="tool-desc">
+          Los plugins de Google <em>ya son</em> los MCPs — un checkbox los activa. Firebase, Chrome DevTools, Antigravity SDK. Modelos integrados: Gemini y Claude con Thinking nativo.
+        </div>
+        <div class="stack-tags" style="margin-top:.75rem">
+          <span class="stack-tag gcp">Firebase Plugin</span>
+          <span class="stack-tag gcp">Antigravity SDK</span>
+          <span class="stack-tag gcp">Chrome DevTools</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Agentes de escritorio</div>
+        <div class="tool-role">Claude Desktop · Windsurf · Cursor · MCP vía JSON</div>
+        <div class="tool-desc">
+          Conectan Knowledge MCP, Maps Code Assist, Firestore MCP y Cloud Run MCP. El protocolo es el mismo — el agente es el que eliges. Ideal para demos interactivos con contexto real de las APIs de Google.
+        </div>
+        <div class="stack-tags" style="margin-top:.75rem">
+          <span class="stack-tag">Knowledge MCP</span>
+          <span class="stack-tag">Maps Code Assist</span>
+          <span class="stack-tag">Firebase MCP</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Agentes de terminal</div>
+        <div class="tool-role">Claude Code · GitHub Codex · Gemini CLI</div>
+        <div class="tool-desc">
+          Viven dentro de tu proyecto. Leen el context file al iniciar (<code style="color:var(--accent);font-size:.7rem">CLAUDE.md</code> / <code style="color:var(--accent);font-size:.7rem">AGENTS.md</code>). Prompt caching automático. Tu mejor aliado para edición masiva en el hackathon.
+        </div>
+        <div class="stack-tags" style="margin-top:.75rem">
+          <span class="stack-tag">CLAUDE.md</span>
+          <span class="stack-tag">AGENTS.md</span>
+          <span class="stack-tag">prompt cache</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider">modelos recomendados para HackFox — Claude como ejemplo</div>
+
+    <div class="models-grid">
+      <div class="model-card">
+        <div class="model-name">Claude Haiku 4.5</div>
+        <div class="model-when">Clasificaciones rápidas, stubs, preguntas simples. Muy rápido y económico para tareas repetitivas.</div>
+      </div>
+      <div class="model-card default">
+        <div class="model-name">Claude Sonnet 4.6 ← default</div>
+        <div class="model-when">90% del desarrollo del hackathon. Mejor relación velocidad/calidad. Con Extended Thinking para arquitectura.</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Gemini 2.0 Flash</div>
+        <div class="model-when">Para Firebase Studio y Firebase AI Logic. Nativo en el stack GCP. Ideal cuando el contexto ya está en Google Cloud.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── SIN MCP vs CON MCP — SEQUENCE DIAGRAM ─── -->
+<section class="slide" id="secuencia">
+  <div class="slide-inner">
+    <div class="section-label">Comparativa de flujo</div>
+    <h2>Sin MCP vs. con MCP — secuencia real</h2>
+    <p>La misma tarea — generar código con datos de Firestore — con y sin Model Context Protocol.</p>
+
+    <div class="mermaid-wrap">
+      <div class="mermaid-title">sequenceDiagram · El mismo dev · el mismo agente de IA · distinto resultado</div>
+      <pre class="mermaid">
+sequenceDiagram
+  autonumber
+  actor Dev as 🧑‍💻 Dev / Analista / PM
+  participant AI as 🤖 Agente de IA
+  participant MCP as ⚡ MCP Server
+  participant GCP as ☁️ Google API
+
+  rect rgb(40, 10, 10)
+    Note over Dev,GCP: ❌ Sin MCP — el loop del copy-paste
+    Dev->>Dev: Abre Firestore, copia el schema
+    Dev->>AI: Pega schema + "genera la pantalla / el análisis"
+    AI-->>Dev: Respuesta generada (contexto puede estar desactualizado)
+    Dev->>Dev: El resultado falla — schema o datos cambiaron
+    Dev->>AI: Vuelve a pegar schema actualizado
+    AI-->>Dev: Segunda versión (otro intento sin contexto real)
+  end
+
+  rect rgb(5, 30, 15)
+    Note over Dev,GCP: ✅ Con MCP — contexto en tiempo real
+    Dev->>AI: "Genera la pantalla de barreras desde Firestore"
+    AI->>MCP: get_collection_schema(barriers)
+    MCP->>GCP: Firestore Admin API — schema real
+    GCP-->>MCP: Schema actual con todos los campos
+    MCP-->>AI: Schema + contexto + tipos de datos
+    AI-->>Dev: Código correcto, primera vez, sin errores de schema
+  end
+      </pre>
+    </div>
+
+    <div class="stats-grid" style="margin-top:1rem">
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--red)">4+</div>
+        <div class="stat-label">roundtrips sin MCP<br/>para llegar a código funcional</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" style="color:var(--green)">1</div>
+        <div class="stat-label">roundtrip con MCP<br/>— contexto real desde el primer mensaje</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">menos fricción<br/>— la IA trabaja con datos vivos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 1: KNOWLEDGE MCP ─── -->
+<section class="slide" id="demos">
+  <div class="slide-inner">
+    <div class="section-label">DEMO EN VIVO — DEMO 1</div>
+    <div class="demo-badge">Knowledge MCP — Una pregunta que Google no puede responder fácil</div>
+    <h2>La pregunta que nadie sabe responder de memoria</h2>
+
+    <p>Una pregunta con tres capas técnicas que requiere documentación <em>actual</em> — ningún LLM de entrenamiento la responde bien porque Firebase AI Logic salió en 2025 y los safety thresholds cambian con cada versión.</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Agente con Knowledge MCP activo — google-developer-knowledge</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-comment"># Pregunta al Knowledge MCP:</span></div>
+        <br/>
+        <div><span class="term-string">Gemini 2.0 Flash en Firebase AI Logic —</span></div>
+        <div><span class="term-string">¿cuándo uso inlineData vs fileData para fotos desde móvil?</span></div>
+        <div><span class="term-string">¿Hay límite de tamaño?</span></div>
+        <div><span class="term-string">Y si el safety filter bloquea fotos de infraestructura dañada</span></div>
+        <div><span class="term-string">(banquetas rotas, postes caídos), ¿cómo ajusto los thresholds?</span></div>
+        <br/>
+        <div><span class="term-comment">→ consulta Firebase AI Logic docs + Gemini API docs</span></div>
+        <div><span class="term-comment">→ cruza límites de inlineData (20 MB) vs fileData (Cloud Storage URL)</span></div>
+        <div><span class="term-comment">→ localiza la tabla de HarmBlockThreshold actualizada</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 1 (cont.) — RESPUESTA ─── -->
+<section class="slide" id="demos-resp">
+  <div class="slide-inner">
+    <div class="section-label">DEMO 1 — Respuesta</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Respuesta — con fuentes de la documentación oficial</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-highlight">inlineData</span> <span class="term-output">→ base64 en el request · límite 20 MB · ok para fotos móvil (≤ 5 MB típico)</span></div>
+        <div><span class="term-highlight">fileData</span>   <span class="term-output">→ gs:// URI de Cloud Storage · sin límite práctico · requiere bucket mismo proyecto</span></div>
+        <br/>
+        <div><span class="term-output">Safety config para contenido urbano / infraestructura:</span></div>
+        <div><span class="term-success">  HARM_CATEGORY_DANGEROUS_CONTENT  → BLOCK_ONLY_HIGH</span></div>
+        <div><span class="term-success">  HARM_CATEGORY_VIOLENCE           → BLOCK_ONLY_HIGH</span></div>
+        <div><span class="term-output">  (BLOCK_MEDIUM_AND_ABOVE bloquea fotos de daño urbano legítimo)</span></div>
+        <br/>
+        <div><span class="term-comment"># Código generado desde la doc oficial — no de memoria de entrenamiento:</span></div>
+        <div><span class="term-string">const result = await model.generateContent([</span></div>
+        <div><span class="term-string">  { inlineData: { data: base64img, mimeType: 'image/jpeg' } },</span></div>
+        <div><span class="term-string">  'Clasifica el tipo de barrera urbana en esta imagen.'</span></div>
+        <div><span class="term-string">], { safetySettings: [...] });</span></div>
+        <br/>
+        <div><span class="term-success">✓ Respuesta precisa · fuentes citadas · código listo para pegar</span></div>
+        <div><span class="term-warn">⚠ Sin MCP esto tarda 15-20 min y probablemente llega a la doc incorrecta</span></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-label">Por qué esta pregunta es el benchmark perfecto</div>
+      <p>Cualquier LLM de entrenamiento tiene la respuesta desactualizada — <code style="color:var(--accent);background:var(--surface2);padding:.1rem .4rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;">Firebase AI Logic</code> se lanzó en 2025 y los thresholds de safety cambian con cada versión de la API. Knowledge MCP obtiene la respuesta correcta <em>hoy</em>.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 2: FIRESTORE SCHEMA + STITCH ─── -->
+<section class="slide" id="demo-maps">
+  <div class="slide-inner">
+    <div class="section-label">DEMO EN VIVO — DEMO 2</div>
+    <div class="demo-badge">Firebase MCP + Stitch — Base de datos real y UI desde el mismo contexto</div>
+    <h2>Primero la BD. Luego la UI. Con los mismos datos.</h2>
+
+    <p>El flujo completo en dos pasos: Firebase MCP diseña y crea el schema en Firestore real. Después Stitch genera la interfaz leyendo ese mismo schema — sin copiar nada.</p>
+
+    <!-- Paso 1 -->
+    <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Paso 1 — Diseño y creación de la base de datos con Firebase MCP</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Agente con Firebase MCP activo · proyecto hackfox-mcp-demos</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-string">Diseña y crea en Firestore el schema completo para una app</span></div>
+        <div><span class="term-string">de reporte de barreras urbanas en Tijuana.</span></div>
+        <div><span class="term-string">Necesito: usuarios, reportes (tipo, severidad, coordenadas, fotos),</span></div>
+        <div><span class="term-string">votos de la comunidad, y log de resolución por admin.</span></div>
+        <div><span class="term-string">Crea las colecciones con documentos de ejemplo reales.</span></div>
+        <br/>
+        <div><span class="term-comment">→ google-cloud-firestore MCP llama a add_document para cada documento</span></div>
+        <div><span class="term-comment">→ Las colecciones se crean automáticamente al insertar el primer documento</span></div>
+        <br/>
+        <div><span class="term-success">✓ /users/usr_001              { displayName, email, role: 'reporter' }</span></div>
+        <div><span class="term-success">✓ /barriers/bar_001           { type: 'broken_sidewalk', severity: 'high',</span></div>
+        <div><span class="term-success">                                 coords: GeoPoint(32.5149,-117.0382),</span></div>
+        <div><span class="term-success">                                 photos: ['gs://...'], status: 'open',</span></div>
+        <div><span class="term-success">                                 reportedBy: 'usr_001', votes: 12 }</span></div>
+        <div><span class="term-success">✓ /barriers/bar_001/votes/    { userId, createdAt }</span></div>
+        <div><span class="term-success">✓ /resolutions/res_001        { barrierId, adminId, notes, resolvedAt }</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 2 (cont.) — STITCH UI ─── -->
+<section class="slide" id="demo-maps-ui">
+  <div class="slide-inner">
+    <div class="section-label">DEMO 2 — Paso 2</div>
+
+    <!-- Paso 2 -->
+    <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Paso 2 — UI generada con Stitch leyendo ese mismo schema</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Firebase Studio — Stitch · Agent-driven · Sonnet 4.6 (Thinking)</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-string">Genera las tres pantallas principales de la app usando</span></div>
+        <div><span class="term-string">el schema que acabas de crear en Firestore:</span></div>
+        <div><span class="term-string">1. Dashboard con mapa y marcadores por severidad</span></div>
+        <div><span class="term-string">2. Formulario de nuevo reporte con foto upload</span></div>
+        <div><span class="term-string">3. Tarjeta de barrera con botón de voto y estado de resolución</span></div>
+        <br/>
+        <div><span class="term-comment">→ Firebase Studio lee /barriers, /users, /resolutions via plugin nativo de Firestore</span></div>
+        <div><span class="term-comment">→ Genera componentes tipados con los mismos field names del schema</span></div>
+        <div><span class="term-comment">→ Streams de Firestore conectados automáticamente</span></div>
+        <br/>
+        <div><span class="term-success">✓ MapScreen       — marcadores GeoPoint renderizados en Google Maps</span></div>
+        <div><span class="term-success">✓ ReportForm      — upload a gs://, escribe doc en /barriers</span></div>
+        <div><span class="term-success">✓ BarrierCard     — vote button escribe en /barriers/{id}/votes</span></div>
+        <div><span class="term-success">✓ 0 errores de tipo — Stitch usó el schema real, no inventó campos</span></div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-left-color:var(--cyan)">
+      <div class="result-label" style="color:var(--cyan)">La clave del demo</div>
+      <p>Stitch no inventó el campo <code style="color:var(--cyan);background:var(--surface2);padding:.1rem .4rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;">reportedBy</code> — lo leyó de Firestore. Si el schema cambia, la UI se regenera en segundos desde el mismo contexto. Cero desincronización.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 3: DEPLOY A CLOUD RUN ─── -->
+<section class="slide" id="demo-firebase">
+  <div class="slide-inner">
+    <div class="section-label">DEMO EN VIVO — DEMO 3</div>
+    <div class="demo-badge">Cloud Run MCP — De código a URL pública en el chat</div>
+    <h2>Deploy a GCP sin salir de la conversación</h2>
+
+    <p>La app tiene UI, tiene datos. Ahora necesita correr en la nube. Cloud Run MCP hace el deploy — sin cambiar de pantalla, sin buscar comandos.</p>
+
+    <!-- Build -->
+    <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Paso 1 — Claude escribe el servidor mínimo</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Claude Code CLI — dentro del proyecto</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-string">Escribe un servidor Express mínimo que exponga:</span></div>
+        <div><span class="term-string">GET /health → { status: 'ok', project: 'hackfox-barriers' }</span></div>
+        <div><span class="term-string">GET /barriers → lee la colección /barriers de Firestore</span></div>
+        <div><span class="term-string">              y devuelve JSON con los reportes abiertos</span></div>
+        <div><span class="term-string">Usa Application Default Credentials para auth.</span></div>
+        <div><span class="term-string">Puerto desde PORT env variable. Dockerfile incluido.</span></div>
+        <br/>
+        <div><span class="term-success">✓ server.js   — Express + @google-cloud/firestore</span></div>
+        <div><span class="term-success">✓ Dockerfile  — node:20-alpine · EXPOSE 8080</span></div>
+        <div><span class="term-success">✓ .dockerignore generado</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 3 (cont.) — DEPLOY ─── -->
+<section class="slide" id="demo-firebase-deploy">
+  <div class="slide-inner">
+    <div class="section-label">DEMO 3 — Deploy</div>
+
+    <!-- Deploy -->
+    <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Paso 2 — Deploy con Cloud Run MCP</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Agente con Cloud Run MCP activo · proyecto hackfox-mcp-demos</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-string">Despliega el contenido del directorio actual a Cloud Run.</span></div>
+        <div><span class="term-string">Servicio: hackfox-barriers-api</span></div>
+        <div><span class="term-string">Región: us-west1 (la más cercana a Tijuana)</span></div>
+        <div><span class="term-string">Acceso: público · mínimo 0 instancias · máximo 3</span></div>
+        <br/>
+        <div><span class="term-comment">→ Cloud Run MCP ejecuta: deploy_local_folder</span></div>
+        <div><span class="term-comment">→ Build en Artifact Registry · push automático</span></div>
+        <div><span class="term-comment">→ Despliega como servicio Cloud Run serverless</span></div>
+        <br/>
+        <div><span class="term-output">Building and deploying from source...</span></div>
+        <div><span class="term-output">  ✓ Uploading files to Cloud Build</span></div>
+        <div><span class="term-output">  ✓ Building Docker image</span></div>
+        <div><span class="term-output">  ✓ Pushing to Artifact Registry</span></div>
+        <div><span class="term-output">  ✓ Deploying to Cloud Run (us-west1)</span></div>
+        <br/>
+        <div><span class="term-success">✓ Service URL:</span></div>
+        <div><span class="term-url">  https://hackfox-barriers-api-abc123-uw.a.run.app</span></div>
+        <br/>
+        <div><span class="term-prompt">$</span> <span class="term-cmd">curl https://hackfox-barriers-api-abc123-uw.a.run.app/health</span></div>
+        <div><span class="term-success">{"status":"ok","project":"hackfox-barriers"}</span></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="result-label">Cronómetro del demo</div>
+      <p>Desde cero hasta URL pública en producción: <strong style="color:var(--green)">~4 minutos</strong>. Sin abrir la consola de GCP. Sin buscar el comando <code style="color:var(--accent);background:var(--surface2);padding:.1rem .4rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;">gcloud run deploy</code>. Sin salir del chat.</p>
+    </div>
+
+    <div class="result-card" style="border-left-color:var(--yellow)">
+      <div class="result-label" style="color:var(--yellow)">Los tres demos son un flujo, no tres demos independientes</div>
+      <p>Demo 1 resolvió la pregunta técnica difícil → Demo 2 creó la BD y la UI desde el mismo contexto → Demo 3 desplegó esa UI a producción. <strong>Así se gana un hackathon en 26 horas.</strong></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 4: CONTRACTS-FIRST ─── -->
+<section class="slide" id="demo-contracts">
+  <div class="slide-inner">
+    <div class="section-label">💡 PRO TIP — Flujo de equipo · el salto de nivel</div>
+    <div class="demo-badge" style="border-color:var(--purple);color:var(--purple);background:rgba(168,85,247,0.08);">Contracts-first — de coder básico a pro en 10 minutos</div>
+    <h2>Define el contrato. Los agentes generan el resto.</h2>
+
+    <p>No es un demo más — es el consejo que separa al equipo que gana del que crashea en el merge final. El coder básico abre el chat y pide código sin contexto. El coder pro <em>diseña el contrato primero</em> — una spec compartida en el repo — y deja que cada agente de IA genere su capa desde esa fuente única de verdad.</p>
+
+    <div class="versus-grid">
+
+      <div class="versus-col versus-bad">
+        <div class="versus-header">✗ &nbsp;Coder básico</div>
+        <div class="versus-item">"Escríbeme el backend de la app"</div>
+        <div class="versus-item">Frontend y backend con tipos distintos</div>
+        <div class="versus-item">Cada dev pide código sin contexto compartido</div>
+        <div class="versus-item">Bug de integración al hacer merge</div>
+      </div>
+
+      <div class="versus-col versus-good">
+        <div class="versus-header">✓ &nbsp;Coder pro</div>
+        <div class="versus-item">Define <code style="font-family:var(--font-mono);font-size:.75rem;color:var(--purple);background:rgba(168,85,247,0.15);padding:.1rem .4rem;border-radius:3px;">contracts/barriers.ts</code> primero</div>
+        <div class="versus-item">Un solo tipo, generado en ambos lados</div>
+        <div class="versus-item">Todos los agentes leen la misma spec del repo</div>
+        <div class="versus-item">El contrato es el test de integración</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 4 (cont.) — EL CONTRATO ─── -->
+<section class="slide" id="demo-contracts-contrato">
+  <div class="slide-inner">
+    <div class="section-label">DEMO 4 — Paso 1</div>
+
+    <!-- Paso 1 -->
+    <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--purple);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Paso 1 — El equipo define el contrato (10 min al inicio del hackathon)</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">contracts/barriers.ts — la fuente única de verdad del equipo</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-comment">// Diseñado juntos en 10 min · commiteado al repo · todos lo leen</span></div>
+        <br/>
+        <div><span class="term-key">export type</span> <span class="term-highlight">BarrierType</span> <span class="term-output">=</span></div>
+        <div><span class="term-string">  'broken_sidewalk' | 'missing_ramp' | 'blocked_path'</span></div>
+        <div><span class="term-string">  | 'broken_light' | 'pothole' | 'other';</span></div>
+        <br/>
+        <div><span class="term-key">export interface</span> <span class="term-highlight">Barrier</span> <span class="term-output">{</span></div>
+        <div><span class="term-output">  id:          string;               </span><span class="term-comment">// Firestore doc ID</span></div>
+        <div><span class="term-output">  type:        </span><span class="term-highlight">BarrierType</span><span class="term-output">;</span></div>
+        <div><span class="term-output">  severity:    </span><span class="term-string">'low' | 'medium' | 'high' | 'critical'</span><span class="term-output">;</span></div>
+        <div><span class="term-output">  coords:      </span><span class="term-output">{ lat: number; lng: number };</span></div>
+        <div><span class="term-output">  photos:      string[];             </span><span class="term-comment">// gs:// URIs</span></div>
+        <div><span class="term-output">  status:      </span><span class="term-string">'open' | 'in_review' | 'resolved'</span><span class="term-output">;</span></div>
+        <div><span class="term-output">  reportedBy:  string;               </span><span class="term-comment">// userId</span></div>
+        <div><span class="term-output">  votes:       number;</span></div>
+        <div><span class="term-output">  createdAt:   </span><span class="term-highlight">Timestamp</span><span class="term-output">;</span></div>
+        <div><span class="term-output">}</span></div>
+        <br/>
+        <div><span class="term-key">export interface</span> <span class="term-highlight">CreateBarrierRequest</span> <span class="term-output">{</span></div>
+        <div><span class="term-output">  type: </span><span class="term-highlight">BarrierType</span><span class="term-output">; severity: </span><span class="term-highlight">Barrier</span><span class="term-output">['severity'];</span></div>
+        <div><span class="term-output">  coords: </span><span class="term-highlight">Barrier</span><span class="term-output">['coords']; photoBase64?: string;</span></div>
+        <div><span class="term-output">}</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 4 (cont.) — DEVS + MERGE ─── -->
+<section class="slide" id="demo-contracts-devs">
+  <div class="slide-inner">
+    <div class="section-label">DEMO 4 — Pasos 2 y 3</div>
+
+    <!-- Paso 2 -->
+    <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Paso 2 — Cada dev genera su parte desde la misma spec</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Dev 1 (backend) · Dev 2 (frontend) · Dev 3 (tests) — mismo repo, agentes paralelos</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-comment"># Dev 1 — Backend (Claude Code / Codex / Gemini CLI · rama: feature/api)</span></div>
+        <div><span class="term-string">Lee contracts/barriers.ts e implementa el endpoint POST /barriers</span></div>
+        <div><span class="term-string">con validación completa. Usa el tipo CreateBarrierRequest como input.</span></div>
+        <div><span class="term-success">→ ✓ Endpoint tipado · valida contra el contrato · sube foto a gs://</span></div>
+        <br/>
+        <div><span class="term-comment"># Dev 2 — Frontend (Firebase Studio / tu agente preferido · rama: feature/ui)</span></div>
+        <div><span class="term-string">Lee contracts/barriers.ts y genera el formulario de reporte.</span></div>
+        <div><span class="term-string">Usa CreateBarrierRequest como tipo del form. No inventes campos.</span></div>
+        <div><span class="term-success">→ ✓ Form con exactamente los campos del contrato · cero typos</span></div>
+        <br/>
+        <div><span class="term-comment"># Dev 3 — Tests (cualquier agente de IA · rama: feature/tests)</span></div>
+        <div><span class="term-string">Lee contracts/barriers.ts y genera los tests del endpoint POST /barriers.</span></div>
+        <div><span class="term-string">Cubre todos los valores de BarrierType y los 4 valores de severity.</span></div>
+        <div><span class="term-success">→ ✓ 24 test cases generados desde los tipos del contrato</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── DEMO 4 (cont.) — MERGE ─── -->
+<section class="slide" id="demo-contracts-merge">
+  <div class="slide-inner">
+    <div class="section-label">DEMO 4 — Paso 3</div>
+
+    <!-- Paso 3 -->
+    <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">Paso 3 — GitHub como repo comunitario: merge sin sorpresas</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">terminal — merge de las tres ramas</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-prompt">$</span> <span class="term-cmd">git merge feature/api feature/ui feature/tests</span></div>
+        <div><span class="term-output">Merging...</span></div>
+        <div><span class="term-success">✓ No merge conflicts</span></div>
+        <div><span class="term-comment">  (los tres leían el mismo contrato — los tipos son idénticos)</span></div>
+        <br/>
+        <div><span class="term-prompt">$</span> <span class="term-cmd">npm test</span></div>
+        <div><span class="term-success">✓ 24/24 tests passing</span></div>
+        <div><span class="term-output">  POST /barriers — broken_sidewalk/high    ✓</span></div>
+        <div><span class="term-output">  POST /barriers — missing_ramp/critical   ✓</span></div>
+        <div><span class="term-output">  POST /barriers — validation errors       ✓</span></div>
+        <br/>
+        <div><span class="term-success">✓ Ready to deploy</span></div>
+      </div>
+    </div>
+
+    <div class="result-card" style="border-left-color:var(--purple)">
+      <div class="result-label" style="color:var(--purple)">El flujo que separa al equipo ganador del equipo que crashea en el demo</div>
+      <p>No importa si usas Claude Code, GitHub Copilot, Codex o Gemini CLI — el problema no es la herramienta, es la <em>coordinación</em>. Define el contrato en 10 minutos al inicio y todos los agentes, en todos los repos y ramas, generan código coherente desde esa fuente única. <strong style="color:var(--text)">El contrato es la única línea que escribe el humano. El resto lo genera la IA.</strong></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── ARQUITECTURA DE AGENTES ─── -->
+<section class="slide" id="agentes">
+  <div class="slide-inner">
+    <div class="section-label">Arquitectura de Agentes</div>
+    <h2>Un agente para cada rol del equipo</h2>
+
+    <p>No es un prompt de 2,000 palabras — es un archivo markdown por rol. Claude Code lo lee al arrancar. En Firebase Studio, lo activas con una línea. Cada agente sabe sus MCPs, sus restricciones y cuándo ceder el turno a otro.</p>
+
+    <div class="agents-tree">
+      <div class="tree-line">
+        <span class="tree-dir">tu-proyecto/</span>
+      </div>
+      <div class="tree-indent">
+        <div class="tree-line">
+          <span class="tree-sym">├── </span>
+          <span class="tree-file" style="color:var(--accent)">CLAUDE.md</span>
+          <span style="color:var(--text-muted);font-size:.7rem;margin-left:.4rem">/ AGENTS.md</span>
+          <span class="tree-desc">← identidad del proyecto · stack · MCPs disponibles</span>
+        </div>
+        <div class="tree-line">
+          <span class="tree-sym">├── </span>
+          <span class="tree-file" style="color:var(--cyan)">agents.md</span>
+          <span class="tree-desc">← enrutador: qué perfil aplica a cada tarea</span>
+        </div>
+        <div class="tree-line">
+          <span class="tree-sym">└── </span>
+          <span class="tree-dir">agents/</span>
+        </div>
+        <div style="padding-left:3rem">
+          <div class="tree-line">
+            <span class="tree-sym">├── </span>
+            <span class="tree-file" style="color:var(--accent)">orchestrator.md</span>
+            <span class="tree-desc">← backend · Firestore · Cloud Run · IAM · secrets</span>
+          </div>
+          <div class="tree-line">
+            <span class="tree-sym">├── </span>
+            <span class="tree-file" style="color:var(--purple)">support.md</span>
+            <span class="tree-desc">← UI · pitch · Firebase Studio · shadcn · design system</span>
+          </div>
+          <div class="tree-line">
+            <span class="tree-sym">├── </span>
+            <span class="tree-file" style="color:var(--green)">accessibility.md</span>
+            <span class="tree-desc">← WCAG · Chrome DevTools · Lighthouse · a11y audit</span>
+          </div>
+          <div class="tree-line">
+            <span class="tree-sym">├── </span>
+            <span class="tree-file" style="color:var(--yellow)">data.md</span>
+            <span class="tree-desc">← Cloud SQL · Cloud Logging · analytics · pitch con datos</span>
+          </div>
+          <div class="tree-line" style="opacity:.55">
+            <span class="tree-sym">└── </span>
+            <span class="tree-file" style="color:var(--cyan)">tu-rol.md</span>
+            <span class="tree-desc">← el que tú agregas para tu proyecto específico</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">Claude Code CLI — dentro del proyecto · CLAUDE.md activo</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-prompt">$</span> <span class="term-cmd">cd tu-proyecto/ && claude</span></div>
+        <br/>
+        <div><span class="term-success">✓ Leyendo CLAUDE.md...</span></div>
+        <div><span class="term-success">✓ MCPs disponibles: google-developer-knowledge · gmp-code-assist · google-cloud-firestore · cloudrun · cloud-sql-managed-mcp · chrome-devtools-mcp</span></div>
+        <div><span class="term-success">✓ Agentes cargados: orchestrator · support · accessibility · data</span></div>
+        <br/>
+        <div><span class="term-output">Hola, soy tu agente para [nombre del proyecto].</span></div>
+        <div><span class="term-output">¿Es una tarea de backend, UI, accesibilidad o analytics?</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── ARQUITECTURA DE AGENTES — CREA EL TUYO ─── -->
+<section class="slide" id="agentes-custom">
+  <div class="slide-inner">
+    <div class="section-label">Arquitectura de Agentes — personaliza</div>
+    <h2>Crea el tuyo en 5 minutos.</h2>
+
+    <p>Un agente es solo un archivo markdown. Le dices quién es, qué MCPs usar y qué preguntas hacerse antes de actuar. El modelo hace el resto. No hay código, no hay configuración especial.</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">agents/mi-agente.md — plantilla mínima</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-highlight"># Agente: [Nombre] — [Rol en tu proyecto]</span></div>
+        <br/>
+        <div><span class="term-output">Eres el agente responsable de [responsabilidad específica].</span></div>
+        <div><span class="term-output">Tu prioridad en este hackathon es [qué define el éxito].</span></div>
+        <br/>
+        <div><span class="term-comment">## MCPs que debes usar</span></div>
+        <br/>
+        <div><span class="term-output">Antes de [tarea común], usa [nombre del MCP]:</span></div>
+        <div><span class="term-string">"[prompt exacto para obtener contexto real]"</span></div>
+        <br/>
+        <div><span class="term-comment">## Reglas que no puedes romper</span></div>
+        <br/>
+        <div><span class="term-output">- [restricción 1 específica para tu proyecto]</span></div>
+        <div><span class="term-output">- [restricción 2 — qué NO debes tocar]</span></div>
+        <br/>
+        <div><span class="term-comment">## Checklist antes de responder</span></div>
+        <br/>
+        <div><span class="term-output">1. ¿Leíste el estado actual con el MCP?</span></div>
+        <div><span class="term-output">2. ¿Tu respuesta usa datos reales del proyecto?</span></div>
+        <div><span class="term-output">3. ¿El tipo está definido en contracts/?</span></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.7rem;margin-top:1rem">
+      <div class="result-card" style="border-left-color:var(--purple)">
+        <div class="result-label" style="color:var(--purple)">Idea — agente de pitch</div>
+        <p style="margin:0;font-size:.78rem">Conoce la estructura del pitch, los datos del proyecto y los criterios de evaluación. Genera el script en el tono correcto y lo ajusta según el tiempo disponible.</p>
+      </div>
+      <div class="result-card" style="border-left-color:var(--cyan)">
+        <div class="result-label" style="color:var(--cyan)">Idea — agente de testing</div>
+        <p style="margin:0;font-size:.78rem">Lee los contratos TypeScript, genera casos de prueba para cada endpoint y corre los tests. Reporta solo los que fallan.</p>
+      </div>
+      <div class="result-card" style="border-left-color:var(--green)">
+        <div class="result-label" style="color:var(--green)">Idea — agente de onboarding</div>
+        <p style="margin:0;font-size:.78rem">Para el dev que se une tarde al equipo. Lee el repo, explica cada archivo, responde preguntas de "¿qué hace esto?" sin molestar al equipo.</p>
+      </div>
+    </div>
+
+    <div class="quote" style="margin-top:1.25rem">
+      <strong>La regla de oro:</strong> cada agente sabe qué MCPs usar, qué restricciones tiene y cuándo ceder la palabra. El equipo no repite el contexto — el sistema lo preserva.
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── COMPARATIVA ─── -->
+<section class="slide" id="comparativa">
+  <div class="slide-inner">
+    <div class="section-label">Comparativa</div>
+    <h2>Con MCP vs. sin MCP</h2>
+
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead>
+        <tr>
+          <th>Tarea en el hackathon</th>
+          <th>Sin MCP</th>
+          <th>Con MCP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Documentación de Google API</td>
+          <td><span class="cross">✗</span> Copia y pega de developers.google.com (10 min, riesgo versión vieja)</td>
+          <td><span class="check">✓</span> Knowledge MCP — docs actuales en 20 seg</td>
+        </tr>
+        <tr>
+          <td>Query a Firestore</td>
+          <td><span class="cross">✗</span> Pegas el schema en el chat (desincronizado)</td>
+          <td><span class="check">✓</span> Firebase MCP — lee el schema real directo</td>
+        </tr>
+        <tr>
+          <td>Código de integración Maps</td>
+          <td><span class="cross">✗</span> Copias snippets de la doc, ajustas params a mano (versión puede estar deprecada)</td>
+          <td><span class="check">✓</span> Maps MCP — genera código correcto desde docs oficiales, params validados</td>
+        </tr>
+        <tr>
+          <td>Deploy a Cloud Run</td>
+          <td><span class="cross">✗</span> Cambias de contexto, buscas el comando gcloud</td>
+          <td><span class="check">✓</span> Cloud Run MCP — deploy desde el chat</td>
+        </tr>
+        <tr>
+          <td>SQL analítico sobre datos</td>
+          <td><span class="cross">✗</span> Escribes SQL manualmente en consola o cliente externo</td>
+          <td><span class="check">✓</span> Cloud SQL MCP — <code style="font-family:var(--font-mono);font-size:.72rem">execute_sql</code> directo desde el chat</td>
+        </tr>
+        <tr>
+          <td>Componentes de UI</td>
+          <td><span class="cross">✗</span> Buscas en la documentación de shadcn/Tailwind</td>
+          <td><span class="check">✓</span> shadcn MCP — instala y audita desde el chat</td>
+        </tr>
+      </tbody>
+    </table>
+    </div><!-- /.table-wrap -->
+
+    <div class="mantra">
+      La IA es el <span>motor</span>. Tú eres el <span>arquitecto</span>.
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── REGLAS ─── -->
+<section class="slide" id="reglas">
+  <div class="slide-inner">
+    <div class="section-label">Las 3 Reglas</div>
+    <h2>Las que no puedes romper</h2>
+
+    <div class="rules-list">
+      <div class="rule">
+        <span class="rule-num">01</span>
+        <span class="rule-text"><strong>No saltes pasos en el setup.</strong> Auth → Billing → APIs → Recursos → Deploy. En orden. Cada vez. Saltarse uno rompe los siguientes.</span>
+      </div>
+      <div class="rule">
+        <span class="rule-num">02</span>
+        <span class="rule-text"><strong>Configura el CLAUDE.md antes de pedir código.</strong> El agente necesita saber qué estás construyendo. Sin contexto, genera basura elegante.</span>
+      </div>
+      <div class="rule">
+        <span class="rule-num">03</span>
+        <span class="rule-text"><strong>Funcional mata a perfecto.</strong> Un demo que corre con tres features gana a uno perfectamente diseñado que crashea durante el pitch.</span>
+      </div>
+    </div>
+
+    <div class="divider">división de equipo recomendada · 26 horas</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">equipo de 4 · HackFox 2026</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-key">Persona 1</span> <span class="term-comment">— Infraestructura (GCP)</span></div>
+        <div><span class="term-output">  Setup GCP completo (30 min) · deploy inicial Cloud Run (1 hora)</span></div>
+        <br/>
+        <div><span class="term-key">Persona 2</span> <span class="term-comment">— Backend</span></div>
+        <div><span class="term-output">  Endpoints con Claude Code · Gemini Vision · Firebase · Maps</span></div>
+        <br/>
+        <div><span class="term-key">Persona 3</span> <span class="term-comment">— Frontend / UX</span></div>
+        <div><span class="term-output">  UI en Firebase Studio · Agent-driven · CLAUDE.md configurado</span></div>
+        <br/>
+        <div><span class="term-key">Persona 4</span> <span class="term-comment">— Pitch + Datos</span></div>
+        <div><span class="term-output">  Estructura del pitch · Cloud SQL MCP · README · demo flow</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── TAKEAWAYS ─── -->
+<section class="slide" id="takeaways">
+  <div class="slide-inner">
+    <div class="section-label">Takeaways</div>
+    <h2>Para llevarse hoy</h2>
+
+    <div class="takeaways-grid">
+      <div class="takeaway">
+        <div class="takeaway-num">01</div>
+        <div class="takeaway-title">El contexto es todo.</div>
+        <div class="takeaway-body">No importa qué tan bueno sea el modelo. Si le das datos muertos, genera basura elegante. MCP le da contexto vivo desde tus sistemas reales.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">02</div>
+        <div class="takeaway-title">MCP no es un producto.</div>
+        <div class="takeaway-body">Es un protocolo abierto. Knowledge, Maps, Firebase, BigQuery — todos son servidores que conectan la IA con tus APIs reales. Tú decides cuáles activas.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">03</div>
+        <div class="takeaway-title">CLAUDE.md = ROI inmediato.</div>
+        <div class="takeaway-body">5 minutos configurando el CLAUDE.md ahorran 20 prompts repetidos de "recuerda que estamos construyendo...". Mejor inversión de tokens del hackathon.</div>
+      </div>
+      <div class="takeaway">
+        <div class="takeaway-num">04</div>
+        <div class="takeaway-title">Firebase Studio cambia el juego.</div>
+        <div class="takeaway-body">Gemini y Claude juntos, plugins nativos de Google como MCPs, sin configuración JSON. Un checkbox activa el servidor. Esto no existía hace un año.</div>
+      </div>
+    </div>
+
+    <div class="quote" style="text-align:center;font-size:1.05rem;font-style:normal;margin-top:2rem;">
+      Tienen 26 horas. El tiempo es el recurso más escaso.<br/>
+      <strong>"La IA es el motor. Ustedes son los arquitectos. Buena suerte."</strong>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── Q&A ─── -->
+<section class="slide" id="qa">
+  <div class="slide-inner">
+    <div class="section-label">Q&amp;A</div>
+    <h2>¿Preguntas?<span class="cursor"></span></h2>
+
+    <div class="terminal" style="margin-top:1.5rem">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">preguntas frecuentes — respuestas directas</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-prompt">Q</span> <span class="term-cmd">¿Cuánto cuesta todo esto?</span></div>
+        <div><span class="term-success">A</span> <span class="term-output">Firebase Studio: gratis (3 workspaces en preview). Claude Desktop: gratis. Créditos GCP del evento cubren las APIs. Maps: ~$5 USD sobran.</span></div>
+        <br/>
+        <div><span class="term-prompt">Q</span> <span class="term-cmd">¿Funciona con Gemini en lugar de Claude?</span></div>
+        <div><span class="term-success">A</span> <span class="term-output">MCP es protocolo abierto — Gemini, GPT-4, Claude. Para este stack de Google + Thinking mode, Sonnet 4.6 es la combinación más fuerte que encontré.</span></div>
+        <br/>
+        <div><span class="term-prompt">Q</span> <span class="term-cmd">¿Tenemos que usar Firebase Studio?</span></div>
+        <div><span class="term-success">A</span> <span class="term-output">No. VS Code + Claude Code Extension o Cursor funcionan bien para backend. Ventaja de Firebase Studio: plugins de Google ya son los MCPs, cero configuración.</span></div>
+        <br/>
+        <div><span class="term-prompt">Q</span> <span class="term-cmd">¿Y si se cae el WiFi?</span></div>
+        <div><span class="term-success">A</span> <span class="term-output">Claude Code CLI funciona offline para editar y razonar. Regla: primeras 4 horas con WiFi → generar todo lo posible. Después viene el refinamiento.</span></div>
+        <br/>
+        <div><span class="term-prompt">Q</span> <span class="term-cmd">¿Los MCPs pueden escribir a nuestra base de datos?</span></div>
+        <div><span class="term-success">A</span> <span class="term-output">Sí. Firebase MCP tiene R/W. Por eso los roles IAM importan — dar al service account solo los permisos mínimos. En el repo hay una guía de roles por operación.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── MARKDOWN OVERLAY ─── -->
+<div id="md-overlay" role="dialog" aria-modal="true" aria-label="Guía de referencia">
+  <div class="md-overlay-bar">
+    <div class="md-overlay-title">
+      <span>// </span><span id="md-overlay-label">Cargando guía...</span>
+    </div>
+    <div class="md-overlay-actions">
+      <div class="md-overlay-esc">
+        <span class="key">ESC</span> o <span class="key">←</span> para cerrar
+      </div>
+      <button class="md-close-btn" id="md-close-btn" aria-label="Cerrar guía">
+        ✕ Cerrar guía
+      </button>
+    </div>
+  </div>
+  <div class="md-overlay-body">
+    <div class="md-content" id="md-content">
+      <div class="md-loading">Cargando documento...</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── GUÍAS PARA DEVS ─── -->
+<section class="slide" id="guias">
+  <div class="slide-inner">
+    <div class="section-label">Guías para devs</div>
+    <h2>El repo en tu pantalla — ahora mismo</h2>
+    <p>Toda la documentación del sistema de agentes está en el repo. Haz click en cualquier guía para leerla aquí, sin salir de la presentación.</p>
+
+    <div class="guides-grid">
+
+      <div class="guide-card" data-src="hackfox/README.md" data-title="README — Guía completa de setup">
+        <div class="guide-card-icon">📋</div>
+        <div class="guide-card-title">README — Setup completo</div>
+        <div class="guide-card-path">hackfox/README.md</div>
+        <div class="guide-card-desc">14 partes: Firebase Studio, Claude Desktop, Claude Code CLI, GCP setup, MCPs, tokens, prompts.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/CLAUDE.md" data-title="CLAUDE.md — Plantilla de identidad">
+        <div class="guide-card-icon">🧠</div>
+        <div class="guide-card-title">CLAUDE.md — Plantilla</div>
+        <div class="guide-card-path">hackfox/CLAUDE.md</div>
+        <div class="guide-card-desc">Plantilla lista para copiar. Edita los campos entre [ ] y el agente tiene contexto completo en 5 minutos.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/agents.md" data-title="agents.md — Enrutador semántico">
+        <div class="guide-card-icon">🔀</div>
+        <div class="guide-card-title">agents.md — Enrutador</div>
+        <div class="guide-card-path">hackfox/agents.md</div>
+        <div class="guide-card-desc">Define cuándo el agente va al orchestrator (backend/datos) o al support (UI/pitch). La lógica de routing.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/agents/orchestrator.md" data-title="orchestrator.md — Backend &amp; GCP">
+        <div class="guide-card-icon">⚙️</div>
+        <div class="guide-card-title">orchestrator.md</div>
+        <div class="guide-card-path">hackfox/agents/orchestrator.md</div>
+        <div class="guide-card-desc">Reglas para backend, infraestructura GCP, Cloud Run, secrets. El agente que no toca UI.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/agents/support.md" data-title="support.md — UI &amp; Pitch">
+        <div class="guide-card-icon">🎨</div>
+        <div class="guide-card-title">support.md — UI &amp; Pitch</div>
+        <div class="guide-card-path">hackfox/agents/support.md</div>
+        <div class="guide-card-desc">Firebase Studio (Antigravity), shadcn MCP, design system WCAG AA, estructura del pitch de 3 minutos.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/agents/accessibility.md" data-title="accessibility.md — WCAG, Lighthouse y a11y">
+        <div class="guide-card-icon">♿</div>
+        <div class="guide-card-title">accessibility.md — a11y</div>
+        <div class="guide-card-path">hackfox/agents/accessibility.md</div>
+        <div class="guide-card-desc">El agente del tema del hackathon. Corre Lighthouse con Chrome DevTools MCP, audita WCAG 2.1 AA, verifica contraste, touch targets y lectores de pantalla.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/agents/data.md" data-title="data.md — Analytics, SQL y logs">
+        <div class="guide-card-icon">📈</div>
+        <div class="guide-card-title">data.md — Analytics</div>
+        <div class="guide-card-path">hackfox/agents/data.md</div>
+        <div class="guide-card-desc">Cloud SQL MCP para queries analíticos, Cloud Logging para diagnosticar crashes en producción. El agente del PM y del analista del equipo.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/demos/knowledge-mcp.md" data-title="Knowledge MCP — Prompts del demo">
+        <div class="guide-card-icon">📚</div>
+        <div class="guide-card-title">Knowledge MCP — Demo</div>
+        <div class="guide-card-path">hackfox/demos/knowledge-mcp.md</div>
+        <div class="guide-card-desc">Prompts listos para el demo en vivo. Si el WiFi falla, muestra esta guía — "así se ve el resultado".</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/demos/maps-mcp.md" data-title="Maps MCP — Code assist para Google Maps Platform">
+        <div class="guide-card-icon">🗺️</div>
+        <div class="guide-card-title">Maps MCP — Code Assist</div>
+        <div class="guide-card-path">hackfox/demos/maps-mcp.md</div>
+        <div class="guide-card-desc">Code assist para Google Maps Platform — genera código de rutas, geocoding y Places correcto desde documentación oficial. No hace llamadas directas a la API.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/demos/firebase-mcp.md" data-title="Firebase MCP — Prompts del demo">
+        <div class="guide-card-icon">🔥</div>
+        <div class="guide-card-title">Firebase MCP — Demo</div>
+        <div class="guide-card-path">hackfox/demos/firebase-mcp.md</div>
+        <div class="guide-card-desc">Dos MCPs: <code style="font-family:var(--font-mono);font-size:.7rem">google-cloud-firestore</code> para R/W de datos (add_document, list_documents) y <code style="font-family:var(--font-mono);font-size:.7rem">firebase-mcp-server</code> para deploy, SDK config y security rules.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/demos/bigquery-mcp.md" data-title="Analytics — Cloud SQL MCP + alternativas BigQuery">
+        <div class="guide-card-icon">📊</div>
+        <div class="guide-card-title">Analytics — Cloud SQL MCP</div>
+        <div class="guide-card-path">hackfox/demos/bigquery-mcp.md</div>
+        <div class="guide-card-desc">Cloud SQL MCP: <code style="font-family:var(--font-mono);font-size:.7rem">execute_sql</code> directo desde el chat. BigQuery no está en el catálogo actual — esta guía cubre Cloud SQL, Knowledge MCP y cómo agregar BQ como MCP de terceros.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/demos/cloudrun-mcp.md" data-title="Cloud Run MCP — Deploy desde el chat">
+        <div class="guide-card-icon">🚀</div>
+        <div class="guide-card-title">Cloud Run MCP — Deploy</div>
+        <div class="guide-card-path">hackfox/demos/cloudrun-mcp.md</div>
+        <div class="guide-card-desc">Deploy de carpetas locales, archivos en contexto o imágenes de contenedor. Consulta logs y configura servicios sin salir del chat.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/demos/stitch-mcp.md" data-title="Firebase Studio — UI generada por el agente">
+        <div class="guide-card-icon">🎨</div>
+        <div class="guide-card-title">Firebase Studio — Stitch</div>
+        <div class="guide-card-path">hackfox/demos/stitch-mcp.md</div>
+        <div class="guide-card-desc">Generación de UI en Firebase Studio con el agente nativo. Plugins de Google como MCPs: lee el schema real de Firestore y genera componentes sin copiar nada.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/demos/shadcn-mcp.md" data-title="shadcn MCP — Componentes UI y auditoría">
+        <div class="guide-card-icon">🧩</div>
+        <div class="guide-card-title">shadcn MCP — UI &amp; Auditoría</div>
+        <div class="guide-card-path">hackfox/demos/shadcn-mcp.md</div>
+        <div class="guide-card-desc">Busca, explora e instala componentes de shadcn/ui desde el chat. Incluye auditoría de calidad: importaciones, TypeScript y accesibilidad post-generación.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/scripts/setup-gcp.sh" data-title="setup-gcp.sh — Script de infraestructura">
+        <div class="guide-card-icon">⚡</div>
+        <div class="guide-card-title">setup-gcp.sh</div>
+        <div class="guide-card-path">hackfox/scripts/setup-gcp.sh</div>
+        <div class="guide-card-desc">11 secciones de setup de GCP en orden: Auth → Billing → APIs → Resources → Deploy. Leer antes de ejecutar.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+      <div class="guide-card" data-src="hackfox/config/claude_desktop_config.example.json" data-title="claude_desktop_config.json — Plantilla">
+        <div class="guide-card-icon">🔧</div>
+        <div class="guide-card-title">Claude Desktop Config</div>
+        <div class="guide-card-path">hackfox/config/claude_desktop_config.example.json</div>
+        <div class="guide-card-desc">Plantilla JSON para configurar los MCP servers en Claude Desktop. Copia, edita las API keys, reinicia.</div>
+        <div class="guide-card-cta">→ Abrir guía</div>
+      </div>
+
+
+    </div>
+
+    <div class="result-card" style="border-left-color:var(--purple)">
+      <div class="result-label" style="color:var(--purple)">Tip — uso en el hackathon</div>
+      <p>Estas guías están disponibles en el repo para que cada persona del equipo las tenga en su pantalla mientras trabaja. Sin buscar en Google. Sin perder contexto.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ─── REPO / FINAL ─── -->
+<section class="slide" id="repo">
+  <div class="slide-inner">
+    <div class="section-label">clone &amp; play</div>
+    <h2>El material es tuyo.</h2>
+
+    <div class="terminal" style="margin-top:1rem">
+      <div class="terminal-bar">
+        <div class="term-dot red"></div>
+        <div class="term-dot yellow"></div>
+        <div class="term-dot green"></div>
+        <span class="terminal-title">terminal</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="term-prompt">$</span> <span class="term-cmd">git clone https://github.com/SPS-Tech-is-now/hackfox-gcp-mcps</span></div>
+        <div><span class="term-output">Cloning into 'hackfox-gcp-mcps'...</span></div>
+        <div><span class="term-success">✓ done.</span></div>
+        <br/>
+        <div><span class="term-prompt">$</span> <span class="term-cmd">cd hackfox-gcp-mcps/hackfox/ && cat CLAUDE.md</span></div>
+        <div><span class="term-output">  # [NOMBRE DE TU PROYECTO] — HackFox 2026</span></div>
+        <div><span class="term-output">  Edita los campos entre [...] con los datos de tu equipo.</span></div>
+        <div><span class="term-success">  ✓ Sistema de agentes listo en 5 minutos.</span></div>
+        <br/>
+        <div><span class="term-prompt">$</span> <span class="term-cmd">bash scripts/setup-gcp.sh</span></div>
+        <div><span class="term-success">  ✓ Auth → Billing → APIs → Resources → Deploy</span></div>
+      </div>
+    </div>
+
+    <div class="qr-grid">
+      <a class="qr-card" href="https://github.com/SPS-Tech-is-now/hackfox-gcp-mcps" target="_blank">
+        <div class="qr-placeholder">QR</div>
+        <div class="qr-title">Repo GitHub</div>
+        <div class="qr-url">hackfox-gcp-mcps</div>
+      </a>
+      <a class="qr-card" href="https://studio.firebase.google.com" target="_blank">
+        <div class="qr-placeholder">QR</div>
+        <div class="qr-title">Firebase Studio</div>
+        <div class="qr-url">studio.firebase.google.com</div>
+      </a>
+      <a class="qr-card" href="https://github.com/google/mcp" target="_blank">
+        <div class="qr-placeholder">QR</div>
+        <div class="qr-title">Google MCPs</div>
+        <div class="qr-url">github.com/google/mcp</div>
+      </a>
+      <a class="qr-card" href="https://claude.ai/download" target="_blank">
+        <div class="qr-placeholder">QR</div>
+        <div class="qr-title">Claude Desktop</div>
+        <div class="qr-url">claude.ai/download</div>
+      </a>
+      <a class="qr-card" href="https://spsolutions.com.mx" target="_blank">
+        <div class="qr-placeholder">QR</div>
+        <div class="qr-title">SPS Solutions</div>
+        <div class="qr-url">spsolutions.com.mx</div>
+      </a>
+    </div>
+
+    <!-- Logo band: SPS × Google Cloud × Anthropic × GDG Tijuana -->
+    <div class="logo-band" style="margin-top:2.5rem;border-top:1px solid var(--border);padding-top:2rem;">
+      <div class="logo-band-item">
+        <img src="assets/logos/sps.png"
+             onerror="this.onerror=null;this.src='https://logos-api.apistemic.com/domain:spsolutions.com.mx'"
+             alt="SP Solutions" />
+        <span>SPS Solutions</span>
+      </div>
+      <span class="logo-band-sep">×</span>
+      <div class="logo-band-item">
+        <img src="assets/logos/google-cloud.png"
+             onerror="this.onerror=null;this.src='https://logos-api.apistemic.com/domain:cloud.google.com'"
+             alt="Google Cloud" />
+        <span>Google Cloud</span>
+      </div>
+      <span class="logo-band-sep">×</span>
+      <div class="logo-band-item">
+        <img src="https://logos-api.apistemic.com/domain:anthropic.com"
+             alt="Anthropic" loading="lazy"
+             onerror="this.onerror=null;this.style.display='none'" />
+        <span>Anthropic · Claude</span>
+      </div>
+      <span class="logo-band-sep">×</span>
+      <div class="logo-band-item client-logo-wrap">
+        <img src="assets/logos/gdgtijuana.png"
+             data-domain="gdg.community.dev"
+             alt="GDG Tijuana" loading="lazy"
+             onerror="
+               if(this.src.indexOf('assets/')>-1){
+                 this.src='https://logos-api.apistemic.com/domain:'+this.dataset.domain+'?fallback=404';
+               } else {
+                 this.onerror=null;
+                 handleLogoError(this,'GDG Tijuana');
+               }
+             " />
+        <span>GDG Tijuana</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ─── FOOTER SPS ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="https://www.spsolutions.com.mx" target="_blank" rel="noopener">
+        <img src="assets/logos/sps.png"
+             onerror="this.onerror=null;this.src='https://logos-api.apistemic.com/domain:spsolutions.com.mx'"
+             alt="SP Solutions" />
+      </a>
+      <a href="https://www.spsolutions.com.mx" target="_blank" rel="noopener"
+         style="color:var(--accent);text-decoration:none;font-weight:600;font-size:.8rem;">
+        🌐 www.spsolutions.com.mx
+      </a>
+    </div>
+    <span class="footer-conf">
+      HackFox 2026 · GDG Tijuana × SPS × Google Cloud · Mayo 2026
+    </span>
+  </div>
+
+  <div class="ft-tags">
+    <span class="ft-tag">SP Solutions</span>
+    <span class="ft-tag">Google Cloud Premier Partner</span>
+    <span class="ft-tag">Model Context Protocol</span>
+    <span class="ft-tag">Firebase Studio</span>
+    <span class="ft-tag">Claude Sonnet 4.6</span>
+    <span class="ft-tag">GDG Tijuana</span>
+  </div>
+
+  <div class="footer-bottom">
+    <div>
+      <a href="https://hackfox.gdgtijuana.com" target="_blank">HackFox 2026</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/SPS-Tech-is-now/hackfox-gcp-mcps" target="_blank">github.com/SPS-Tech-is-now/hackfox-gcp-mcps</a>
+      &nbsp;·&nbsp;
+      <a href="https://gdg.community.dev/gdg-tijuana/" target="_blank">GDG Tijuana</a>
+    </div>
+    <!-- Atribución requerida por apistemic logos -->
+    <div style="font-size:.62rem;color:rgba(255,255,255,.25);">
+      Logos by <a href="https://apistemic.com" target="_blank"
+        rel="noopener" style="color:rgba(255,255,255,.35);">apistemic logos</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ─── MERMAID CDN ─── -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      primaryColor:        '#1a73e8',
+      primaryTextColor:    '#ffffff',
+      primaryBorderColor:  'rgba(26,115,232,0.5)',
+      lineColor:           '#64748b',
+      secondaryColor:      '#f1f5f9',
+      tertiaryColor:       '#e8f0fe',
+      background:          '#ffffff',
+      nodeBorder:          '#c5d8fc',
+      clusterBkg:          '#f0f4ff',
+      clusterBorder:       '#c5d8fc',
+      titleColor:          '#1a1a2e',
+      edgeLabelBackground: '#ffffff',
+      fontFamily:          "'Google Sans','Segoe UI',Arial,sans-serif",
+      fontSize:            '14px',
+      // Sequence diagram
+      actorBkg:            '#1a1a2e',
+      actorTextColor:      '#ffffff',
+      actorBorder:         '#1a73e8',
+      activationBkgColor:  '#e8f0fe',
+      activationBorderColor: '#1a73e8',
+      labelBoxBkgColor:    '#1a1a2e',
+      labelBoxBorderColor: '#1a73e8',
+      labelTextColor:      '#ffffff',
+      loopTextColor:       '#1a1a2e',
+      noteBkgColor:        '#fef9c3',
+      noteBorderColor:     '#eab308',
+      noteTextColor:       '#713f12',
+    }
+  });
+</script>
+
+<!-- ─── MARKED.JS — Markdown renderer ─── -->
+<script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+
+<!-- ─── GUIDE CARDS + OVERLAY LOGIC ─── -->
+<script>
+  /* ── Marked options ── */
+  marked.setOptions({
+    breaks: true,
+    gfm: true,
+  });
+
+  const overlay    = document.getElementById('md-overlay');
+  const mdContent  = document.getElementById('md-content');
+  const mdLabel    = document.getElementById('md-overlay-label');
+  const mdCloseBtn = document.getElementById('md-close-btn');
+
+  /* Prevent body scroll when overlay is open */
+  function lockScroll()   { document.documentElement.style.overflowY = 'hidden'; }
+  function unlockScroll() { document.documentElement.style.overflowY = ''; }
+
+  /* Open overlay and load markdown */
+  async function openGuide(src, title) {
+    mdLabel.textContent = title;
+    mdContent.innerHTML = '<div class="md-loading">Cargando documento...</div>';
+    overlay.classList.add('open');
+    lockScroll();
+    overlay.focus();
+
+    try {
+      const res = await fetch(src);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.text();
+
+      // Detect if it's a shell script or JSON — render as code block
+      const ext = src.split('.').pop().toLowerCase();
+      let html;
+      if (['sh', 'json'].includes(ext)) {
+        const lang = ext === 'sh' ? 'bash' : 'json';
+        html = marked.parse('```' + lang + '\n' + raw + '\n```');
+      } else {
+        html = marked.parse(raw);
+      }
+
+      mdContent.innerHTML = html;
+      mdContent.scrollTop = 0;
+    } catch (err) {
+      mdContent.innerHTML = `
+        <div style="padding:2rem;text-align:center;color:#64748b;font-family:monospace;">
+          <div style="font-size:2rem;margin-bottom:1rem;">📁</div>
+          <div style="font-size:.9rem;color:#1a1a2e;font-weight:600;margin-bottom:.5rem;">
+            Archivo disponible en el repo
+          </div>
+          <div style="font-size:.8rem;color:#57534e;">
+            <code style="background:#f0f4ff;padding:.2rem .5rem;border-radius:4px;">${src}</code>
+          </div>
+          <div style="margin-top:1.5rem;font-size:.78rem;color:#94a3b8;">
+            Este documento se puede leer directamente al clonar el repositorio.<br/>
+            <a href="https://github.com/SPS-Tech-is-now/hackfox-gcp-mcps/blob/main/${src}"
+               target="_blank" style="color:#1a73e8;">→ Ver en GitHub</a>
+          </div>
+        </div>`;
+    }
+  }
+
+  /* Close overlay */
+  function closeOverlay() {
+    overlay.classList.remove('open');
+    unlockScroll();
+  }
+
+  /* Wire up guide cards */
+  document.querySelectorAll('.guide-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const src   = card.dataset.src;
+      const title = card.dataset.title;
+      if (src) openGuide(src, title);
+    });
+
+    /* Keyboard: Enter or Space activates the card */
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.addEventListener('keydown', e => {
+      if (e.code === 'Enter' || e.code === 'Space') {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+
+  /* Close button */
+  mdCloseBtn.addEventListener('click', closeOverlay);
+
+  /* Click outside content closes overlay */
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeOverlay();
+  });
+</script>
+
+<!-- ─── KEYBOARD NAVIGATION ─── -->
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let current = 0;
+
+  function getVisibleSlide() {
+    const vh = window.innerHeight;
+    for (let i = 0; i < slides.length; i++) {
+      const rect = slides[i].getBoundingClientRect();
+      if (rect.top >= -vh * 0.5 && rect.top < vh * 0.5) return i;
+    }
+    return current;
+  }
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= slides.length) return;
+    current = idx;
+    slides[current].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    /* If overlay is open, only ESC / ArrowLeft close it */
+    if (overlay.classList.contains('open')) {
+      if (e.code === 'Escape' || e.code === 'ArrowLeft') {
+        e.preventDefault();
+        closeOverlay();
+      }
+      return; /* Block all other navigation while overlay is open */
+    }
+
+    current = getVisibleSlide();
+    if (e.code === 'Space' || e.code === 'ArrowDown' || e.code === 'PageDown') {
+      e.preventDefault();
+      goTo(current + 1);
+    }
+    if (e.code === 'ArrowUp' || e.code === 'PageUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    }
+  });
+</script>
+
+<!-- ─── INTERSECTION OBSERVER — reveal animations ─── -->
+<script>
+(function() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+</script>
+
+<!-- ─── DEMO BADGE HOVER GLOW ─── -->
+<script>
+document.querySelectorAll('.tool-card, .result-card, .guide-card, .model-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'border-color .2s, box-shadow .2s, transform .2s';
+    card.style.transform = 'translateY(-2px)';
+    card.style.boxShadow = '0 6px 28px rgba(26,115,232,0.18)';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  });
+});
+</script>
+
+<!-- ─── HACKFOX EVENT BANNER STRIP ─── -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:150;background:rgba(10,10,15,0.97);border-bottom:1px solid rgba(26,115,232,0.25);padding:5px 0;overflow:hidden;" id="hackfox-strip" aria-hidden="true">
+  <div class="logo-marquee-track" style="display:flex;gap:0;width:max-content;animation:marquee-scroll 32s linear infinite;">
+    <!-- First half -->
+    <span class="logo-marquee-item">🦊 HackFox 2026</span>
+    <span class="logo-marquee-item">📍 Pixeland Arcade · Tijuana BC</span>
+    <span class="logo-marquee-item">⚡ MCP · Model Context Protocol</span>
+    <span class="logo-marquee-item">🌐 Knowledge MCP</span>
+    <span class="logo-marquee-item">🔥 Firebase MCP</span>
+    <span class="logo-marquee-item">☁️ Cloud Run MCP</span>
+    <span class="logo-marquee-item">🤖 Claude Sonnet 4.6</span>
+    <span class="logo-marquee-item">💎 GitHub Codex</span>
+    <span class="logo-marquee-item">✨ Gemini 2.0 Flash</span>
+    <span class="logo-marquee-item">🏆 contracts-first</span>
+    <span class="logo-marquee-item">🚀 Firebase Studio · Stitch</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="logo-marquee-item">🦊 HackFox 2026</span>
+    <span class="logo-marquee-item">📍 Pixeland Arcade · Tijuana BC</span>
+    <span class="logo-marquee-item">⚡ MCP · Model Context Protocol</span>
+    <span class="logo-marquee-item">🌐 Knowledge MCP</span>
+    <span class="logo-marquee-item">🔥 Firebase MCP</span>
+    <span class="logo-marquee-item">☁️ Cloud Run MCP</span>
+    <span class="logo-marquee-item">🤖 Claude Sonnet 4.6</span>
+    <span class="logo-marquee-item">💎 GitHub Codex</span>
+    <span class="logo-marquee-item">✨ Gemini 2.0 Flash</span>
+    <span class="logo-marquee-item">🏆 contracts-first</span>
+    <span class="logo-marquee-item">🚀 Firebase Studio · Stitch</span>
+  </div>
+</div>
+
+</body>
+</html>
